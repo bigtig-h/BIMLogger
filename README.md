@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=waving&color=87CEFA&height=200&section=header&text=welcomeKM!&fontSize=60&animation=twinkling&fontColor=F0F8FF&fontAlign=70&fontAlignY=35)
+![header](https://capsule-render.vercel.app/api?type=waving&color=87CEFA&height=200&section=header&text=YonseiBIG-BIMLogger!&fontSize=60&animation=twinkling&fontColor=F0F8FF&fontAlign=70&fontAlignY=35)
 
 ## We are Yonsei BIG - BIM Logger Team
  - 장수형 (Ph.D Course)
