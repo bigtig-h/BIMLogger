@@ -1,0 +1,2231 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.SemanticKernel.Connectors.OpenAI</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AddHeaderRequestPolicy">
+            <summary>
+            Helper class to inject headers into Azure SDK HTTP pipeline
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore">
+            <summary>
+            Core implementation for Azure OpenAI clients, providing common functionality and properties.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore.DeploymentNameKey">
+            <summary>
+            Gets the key used to store the deployment name in the <see cref="P:Microsoft.SemanticKernel.Services.IAIService.Attributes"/> dictionary.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore.Client">
+            <summary>
+            OpenAI / Azure OpenAI Client
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore.#ctor(System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore"/> class using API Key authentication.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore.#ctor(System.String,System.String,Azure.Core.TokenCredential,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore"/> class supporting AAD authentication.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credential">Token credential, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIClientCore"/> class using the specified OpenAIClient.
+            Note: instances created this way might not have the default diagnostics settings,
+            it's up to the caller to configure the client.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/>.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILogger"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIWithDataChatMessageContent">
+            <summary>
+            OpenAI specialized with data chat message content
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIWithDataChatMessageContent.ToolContent">
+            <summary>
+            Content from data source, including citations.
+            For more information see <see href="https://learn.microsoft.com/en-us/azure/ai-services/openai/concepts/use-your-data#conversation-history-for-better-results"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIWithDataChatMessageContent.#ctor(Microsoft.SemanticKernel.Connectors.OpenAI.ChatWithDataChoice,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent"/> class.
+            </summary>
+            <param name="chatChoice">Azure Chat With Data Choice</param>
+            <param name="modelId">The model ID used to generate the content</param>
+            <param name="metadata">Additional metadata</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIWithDataStreamingChatMessageContent">
+            <summary>
+            Azure Open AI WithData Specialized streaming chat message content.
+            </summary>
+            <remarks>
+            Represents a chat message content chunk that was streamed from the remote model.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIWithDataStreamingChatMessageContent.FunctionName">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIWithDataStreamingChatMessageContent.FunctionArgument">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIWithDataStreamingChatMessageContent.#ctor(Microsoft.SemanticKernel.Connectors.OpenAI.ChatWithDataStreamingChoice,System.Int32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Create a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent"/> class.
+            </summary>
+            <param name="choice">Azure message update representation from WithData apis</param>
+            <param name="choiceIndex">Index of the choice</param>
+            <param name="modelId">The model ID used to generate the content</param>
+            <param name="metadata">Additional metadata</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore">
+            <summary>
+            Base class for AI clients that provides common functionality for interacting with OpenAI services.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.MaxInflightAutoInvokes">
+            <summary>
+            The maximum number of auto-invokes that can be in-flight at any given time as part of the current
+            asynchronous chain of execution.
+            </summary>
+            <remarks>
+            This is a fail-safe mechanism. If someone accidentally manages to set up execution settings in such a way that
+            auto-invocation is invoked recursively, and in particular where a prompt function is able to auto-invoke itself,
+            we could end up in an infinite loop. This const is a backstop against that happening. We should never come close
+            to this limit, but if we do, auto-invoke will be disabled for the current flow in order to prevent runaway execution.
+            With the current setup, the way this could possibly happen is if a prompt function is configured with built-in
+            execution settings that opt-in to auto-invocation of everything in the kernel, in which case the invocation of that
+            prompt function could advertize itself as a candidate for auto-invocation. We don't want to outright block that,
+            if that's something a developer has asked to do (e.g. it might be invoked with different arguments than its parent
+            was invoked with), but we do want to limit it. This limit is arbitrary and can be tweaked in the future and/or made
+            configurable should need arise.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.s_inflightAutoInvokes">
+            <summary>Tracking <see cref="T:System.Threading.AsyncLocal`1"/> for <see cref="F:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.MaxInflightAutoInvokes"/>.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.DeploymentOrModelName">
+            <summary>
+            Model Id or Deployment Name
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.Client">
+            <summary>
+            OpenAI / Azure OpenAI Client
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.Logger">
+            <summary>
+            Logger instance
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.Attributes">
+            <summary>
+            Storage for AI service attributes.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.s_meter">
+            <summary>
+            Instance of <see cref="T:System.Diagnostics.Metrics.Meter"/> for metrics.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.s_promptTokensCounter">
+            <summary>
+            Instance of <see cref="T:System.Diagnostics.Metrics.Counter`1"/> to keep track of the number of prompt tokens used.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.s_completionTokensCounter">
+            <summary>
+            Instance of <see cref="T:System.Diagnostics.Metrics.Counter`1"/> to keep track of the number of completion tokens used.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.s_totalTokensCounter">
+            <summary>
+            Instance of <see cref="T:System.Diagnostics.Metrics.Counter`1"/> to keep track of the total number of tokens used.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.GetTextResultsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <summary>
+            Creates completions for the prompt and settings.
+            </summary>
+            <param name="text">The prompt to complete.</param>
+            <param name="executionSettings">Execution settings for the completion API.</param>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>Completions generated by the remote model</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.GetEmbeddingsAsync(System.Collections.Generic.IList{System.String},Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <summary>
+            Generates an embedding from the given <paramref name="data"/>.
+            </summary>
+            <param name="data">List of strings to generate embeddings for</param>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>List of embeddings</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.GetChatMessageContentsAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <summary>
+            Generate a new chat message
+            </summary>
+            <param name="chat">Chat history</param>
+            <param name="executionSettings">Execution settings for the completion API.</param>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="cancellationToken">Async cancellation token</param>
+            <returns>Generated chat message in string format</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.IsRequestableTool(Azure.AI.OpenAI.ChatCompletionsOptions,Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall)">
+            <summary>Checks if a tool call is for a function that was defined.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.GetOpenAIClientOptions(System.Net.Http.HttpClient)">
+            <summary>Gets options to use for an OpenAIClient</summary>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <returns>An instance of <see cref="T:Azure.AI.OpenAI.OpenAIClientOptions"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.CreateNewChat(System.String,Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings)">
+            <summary>
+            Create a new empty chat instance
+            </summary>
+            <param name="text">Optional chat instructions for the AI service</param>
+            <param name="executionSettings">Execution settings</param>
+            <returns>Chat object</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ClientCore.CaptureUsageDetails(Azure.AI.OpenAI.CompletionsUsage)">
+            <summary>
+            Captures usage details, including token information.
+            </summary>
+            <param name="usage">Instance of <see cref="T:Azure.AI.OpenAI.CompletionsUsage"/> with usage details.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent">
+            <summary>
+            OpenAI specialized chat message content
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent.ToolIdProperty">
+            <summary>
+            Gets the metadata key for the <see cref="P:Azure.AI.OpenAI.ChatCompletionsToolCall.Id"/> name property.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent.FunctionToolCallsProperty">
+            <summary>
+            Gets the metadata key for the list of <see cref="T:Azure.AI.OpenAI.ChatCompletionsFunctionToolCall"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent.#ctor(Azure.AI.OpenAI.ChatResponseMessage,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent"/> class.
+            </summary>
+            <param name="chatMessage">Azure SDK chat message</param>
+            <param name="modelId">The model ID used to generate the content</param>
+            <param name="metadata">Additional metadata</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent.#ctor(Azure.AI.OpenAI.ChatRole,System.String,System.String,System.Collections.Generic.IReadOnlyList{Azure.AI.OpenAI.ChatCompletionsToolCall},System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent.#ctor(Microsoft.SemanticKernel.ChatCompletion.AuthorRole,System.String,System.String,System.Collections.Generic.IReadOnlyList{Azure.AI.OpenAI.ChatCompletionsToolCall},System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent"/> class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent.ToolCalls">
+            <summary>
+            A list of the tools called by the model.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatMessageContent.GetOpenAIFunctionToolCalls">
+            <summary>
+            Retrieve the resulting function from the chat result.
+            </summary>
+            <returns>The <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall"/>, or null if no function was returned by the model.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore">
+            <summary>
+            Core implementation for OpenAI clients, providing common functionality and properties.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore.OrganizationKey">
+            <summary>
+            Gets the attribute name used to store the organization in the <see cref="P:Microsoft.SemanticKernel.Services.IAIService.Attributes"/> dictionary.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore.Client">
+            <summary>
+            OpenAI / Azure OpenAI Client
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore.#ctor(System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore"/> class.
+            </summary>
+            <param name="modelId">Model name.</param>
+            <param name="apiKey">OpenAI API Key.</param>
+            <param name="organization">OpenAI Organization Id (usually optional).</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore"/> class using the specified OpenAIClient.
+            Note: instances created this way might not have the default diagnostics settings,
+            it's up to the caller to configure the client.
+            </summary>
+            <param name="modelId">Azure OpenAI model ID or deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/>.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIClientCore.LogActionDetails(System.String)">
+            <summary>
+            Logs OpenAI action details.
+            </summary>
+            <param name="callerMemberName">Caller member name. Populated automatically by runtime.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionParameter">
+            <summary>
+            Represents a function parameter that can be passed to an OpenAI function tool call.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionParameter.Name">
+            <summary>Gets the name of the parameter.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionParameter.Description">
+            <summary>Gets a description of the parameter.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionParameter.IsRequired">
+            <summary>Gets whether the parameter is required vs optional.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionParameter.ParameterType">
+            <summary>Gets the <see cref="T:System.Type"/> of the parameter, if known.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionParameter.Schema">
+            <summary>Gets a JSON schema for the parameter, if known.</summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionReturnParameter">
+            <summary>
+            Represents a function return parameter that can be returned by a tool call to OpenAI.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionReturnParameter.Description">
+            <summary>Gets a description of the return parameter.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionReturnParameter.ParameterType">
+            <summary>Gets the <see cref="T:System.Type"/> of the return parameter, if known.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionReturnParameter.Schema">
+            <summary>Gets a JSON schema for the return parameter, if known.</summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction">
+            <summary>
+            Represents a function that can be passed to the OpenAI API
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.s_zeroFunctionParametersSchema">
+            <summary>
+            Cached <see cref="T:System.BinaryData"/> storing the JSON for a function with no parameters.
+            </summary>
+            <remarks>
+            This is an optimization to avoid serializing the same JSON Schema over and over again
+            for this relatively common case.
+            </remarks>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.s_stringNoDescriptionSchema">
+            <summary>
+            Cached schema for a descriptionless string.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.#ctor(System.String,System.String,System.String,System.Collections.Generic.IReadOnlyList{Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionParameter},Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionReturnParameter)">
+            <summary>Initializes the OpenAIFunction.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.NameSeparator">
+            <summary>Gets the separator used between the plugin name and the function name, if a plugin name is present.</summary>
+            <remarks>This separator was previously <c>_</c>, but has been changed to <c>-</c> to better align to the behavior elsewhere in SK and in response
+            to developers who want to use underscores in their function or plugin names. We plan to make this setting configurable in the future.</remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.PluginName">
+            <summary>Gets the name of the plugin with which the function is associated, if any.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.FunctionName">
+            <summary>Gets the name of the function.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.FullyQualifiedName">
+            <summary>Gets the fully-qualified name of the function.</summary>
+            <remarks>
+            This is the concatenation of the <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.PluginName"/> and the <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.FunctionName"/>,
+            separated by <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.NameSeparator"/>. If there is no <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.PluginName"/>, this is
+            the same as <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.FunctionName"/>.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.Description">
+            <summary>Gets a description of the function.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.Parameters">
+            <summary>Gets a list of parameters to the function, if any.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.ReturnParameter">
+            <summary>Gets the return parameter of the function, if any.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.ToFunctionDefinition">
+            <summary>
+            Converts the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction"/> representation to the Azure SDK's
+            <see cref="T:Azure.AI.OpenAI.FunctionDefinition"/> representation.
+            </summary>
+            <returns>A <see cref="T:Azure.AI.OpenAI.FunctionDefinition"/> containing all the function information.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.GetDefaultSchemaForTypelessParameter(System.String)">
+            <summary>Gets a <see cref="T:Microsoft.SemanticKernel.KernelJsonSchema"/> for a typeless parameter with the specified description, defaulting to typeof(string)</summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall">
+            <summary>
+            Represents an OpenAI function tool call with deserialized function name and arguments.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.#ctor(Azure.AI.OpenAI.ChatCompletionsFunctionToolCall)">
+            <summary>Initialize the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall"/> from a <see cref="T:Azure.AI.OpenAI.ChatCompletionsFunctionToolCall"/>.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.Id">
+            <summary>Gets the ID of the tool call.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.PluginName">
+            <summary>Gets the name of the plugin with which this function is associated, if any.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.FunctionName">
+            <summary>Gets the name of the function.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.Arguments">
+            <summary>Gets a name/value collection of the arguments to the function, if any.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.FullyQualifiedName">
+            <summary>Gets the fully-qualified name of the function.</summary>
+            <remarks>
+            This is the concatenation of the <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.PluginName"/> and the <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.FunctionName"/>,
+            separated by <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction.NameSeparator"/>. If there is no <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.PluginName"/>,
+            this is the same as <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.FunctionName"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.TrackStreamingToolingUpdate(Azure.AI.OpenAI.StreamingToolCallUpdate,System.Collections.Generic.Dictionary{System.Int32,System.String}@,System.Collections.Generic.Dictionary{System.Int32,System.String}@,System.Collections.Generic.Dictionary{System.Int32,System.Text.StringBuilder}@)">
+            <summary>
+            Tracks tooling updates from streaming responses.
+            </summary>
+            <param name="update">The tool call update to incorporate.</param>
+            <param name="toolCallIdsByIndex">Lazily-initialized dictionary mapping indices to IDs.</param>
+            <param name="functionNamesByIndex">Lazily-initialized dictionary mapping indices to names.</param>
+            <param name="functionArgumentBuildersByIndex">Lazily-initialized dictionary mapping indices to arguments.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.ConvertToolCallUpdatesToChatCompletionsFunctionToolCalls(System.Collections.Generic.Dictionary{System.Int32,System.String}@,System.Collections.Generic.Dictionary{System.Int32,System.String}@,System.Collections.Generic.Dictionary{System.Int32,System.Text.StringBuilder}@)">
+            <summary>
+            Converts the data built up by <see cref="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall.TrackStreamingToolingUpdate(Azure.AI.OpenAI.StreamingToolCallUpdate,System.Collections.Generic.Dictionary{System.Int32,System.String}@,System.Collections.Generic.Dictionary{System.Int32,System.String}@,System.Collections.Generic.Dictionary{System.Int32,System.Text.StringBuilder}@)"/> into an array of <see cref="T:Azure.AI.OpenAI.ChatCompletionsFunctionToolCall"/>s.
+            </summary>
+            <param name="toolCallIdsByIndex">Dictionary mapping indices to IDs.</param>
+            <param name="functionNamesByIndex">Dictionary mapping indices to names.</param>
+            <param name="functionArgumentBuildersByIndex">Dictionary mapping indices to arguments.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIKernelFunctionMetadataExtensions">
+            <summary>
+            Extensions for <see cref="T:Microsoft.SemanticKernel.KernelFunctionMetadata"/> specific to the OpenAI connector.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIKernelFunctionMetadataExtensions.ToOpenAIFunction(Microsoft.SemanticKernel.KernelFunctionMetadata)">
+            <summary>
+            Convert a <see cref="T:Microsoft.SemanticKernel.KernelFunctionMetadata"/> to an <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction"/>.
+            </summary>
+            <param name="metadata">The <see cref="T:Microsoft.SemanticKernel.KernelFunctionMetadata"/> object to convert.</param>
+            <returns>An <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction"/> object.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPluginCollectionExtensions">
+            <summary>
+            Extension methods for <see cref="T:Microsoft.SemanticKernel.IReadOnlyKernelPluginCollection"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPluginCollectionExtensions.TryGetFunctionAndArguments(Microsoft.SemanticKernel.IReadOnlyKernelPluginCollection,Azure.AI.OpenAI.ChatCompletionsFunctionToolCall,Microsoft.SemanticKernel.KernelFunction@,Microsoft.SemanticKernel.KernelArguments@)">
+            <summary>
+            Given an <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall"/> object, tries to retrieve the corresponding <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> and populate <see cref="T:Microsoft.SemanticKernel.KernelArguments"/> with its parameters.
+            </summary>
+            <param name="plugins">The plugins.</param>
+            <param name="functionToolCall">The <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall"/> object.</param>
+            <param name="function">When this method returns, the function that was retrieved if one with the specified name was found; otherwise, <see langword="null"/></param>
+            <param name="arguments">When this method returns, the arguments for the function; otherwise, <see langword="null"/></param>
+            <returns><see langword="true"/> if the function was found; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPluginCollectionExtensions.TryGetFunctionAndArguments(Microsoft.SemanticKernel.IReadOnlyKernelPluginCollection,Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall,Microsoft.SemanticKernel.KernelFunction@,Microsoft.SemanticKernel.KernelArguments@)">
+            <summary>
+            Given an <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall"/> object, tries to retrieve the corresponding <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> and populate <see cref="T:Microsoft.SemanticKernel.KernelArguments"/> with its parameters.
+            </summary>
+            <param name="plugins">The plugins.</param>
+            <param name="functionToolCall">The <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunctionToolCall"/> object.</param>
+            <param name="function">When this method returns, the function that was retrieved if one with the specified name was found; otherwise, <see langword="null"/></param>
+            <param name="arguments">When this method returns, the arguments for the function; otherwise, <see langword="null"/></param>
+            <returns><see langword="true"/> if the function was found; otherwise, <see langword="false"/>.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent">
+            <summary>
+            Azure OpenAI and OpenAI Specialized streaming chat message content.
+            </summary>
+            <remarks>
+            Represents a chat message content chunk that was streamed from the remote model.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent.FinishReason">
+            <summary>
+            The reason why the completion finished.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent.#ctor(Azure.AI.OpenAI.StreamingChatCompletionsUpdate,System.Int32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Create a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent"/> class.
+            </summary>
+            <param name="chatUpdate">Internal Azure SDK Message update representation</param>
+            <param name="choiceIndex">Index of the choice</param>
+            <param name="modelId">The model ID used to generate the content</param>
+            <param name="metadata">Additional metadata</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent.#ctor(System.Nullable{Microsoft.SemanticKernel.ChatCompletion.AuthorRole},System.String,Azure.AI.OpenAI.StreamingToolCallUpdate,System.Nullable{Azure.AI.OpenAI.CompletionsFinishReason},System.Int32,System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Create a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent"/> class.
+            </summary>
+            <param name="authorRole">Author role of the message</param>
+            <param name="content">Content of the message</param>
+            <param name="tootToolCallUpdate">Tool call update</param>
+            <param name="completionsFinishReason">Completion finish reason</param>
+            <param name="choiceIndex">Index of the choice</param>
+            <param name="modelId">The model ID used to generate the content</param>
+            <param name="metadata">Additional metadata</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent.ToolCallUpdate">
+            <summary>Gets any update information in the message about a tool call.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent.ToByteArray">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingTextContent">
+            <summary>
+            Azure OpenAI and OpenAI Specialized streaming text content.
+            </summary>
+            <remarks>
+            Represents a text content chunk that was streamed from the remote model.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingTextContent.#ctor(System.String,System.Int32,System.String,System.Object,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Create a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingTextContent"/> class.
+            </summary>
+            <param name="text">Text update</param>
+            <param name="choiceIndex">Index of the choice</param>
+            <param name="modelId">The model ID used to generate the content</param>
+            <param name="innerContentObject">Inner chunk object</param>
+            <param name="metadata">Metadata information</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingTextContent.ToByteArray">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingTextContent.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.RequestFailedExceptionExtensions">
+            <summary>
+            Provides extension methods for the <see cref="T:Azure.RequestFailedException"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.RequestFailedExceptionExtensions.ToHttpOperationException(Azure.RequestFailedException)">
+            <summary>
+            Converts a <see cref="T:Azure.RequestFailedException"/> to an <see cref="T:Microsoft.SemanticKernel.HttpOperationException"/>.
+            </summary>
+            <param name="exception">The original <see cref="T:Azure.RequestFailedException"/>.</param>
+            <returns>An <see cref="T:Microsoft.SemanticKernel.HttpOperationException"/> instance.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService">
+            <summary>
+            Azure OpenAI chat completion service.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService._core">
+            <summary>Core implementation shared by Azure OpenAI clients.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.#ctor(System.String,System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService"/> connector with API key auth.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.#ctor(System.String,System.String,Azure.Core.TokenCredential,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService"/> connector with AAD auth.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService"/> client instance using the specified <see cref="T:Azure.AI.OpenAI.OpenAIClient"/>.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/>.</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.GetChatMessageContentsAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.GetStreamingChatMessageContentsAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.GetTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionService.GetStreamingTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService">
+            <summary>
+            OpenAI chat completion service.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService.#ctor(System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the OpenAI chat completion connector
+            </summary>
+            <param name="modelId">Model name</param>
+            <param name="apiKey">OpenAI API Key</param>
+            <param name="organization">OpenAI Organization Id (usually optional)</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the OpenAI chat completion connector
+            </summary>
+            <param name="modelId">Model name</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService.GetChatMessageContentsAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService.GetStreamingChatMessageContentsAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService.GetTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIChatCompletionService.GetStreamingTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig">
+            <summary>
+            Required configuration for Azure OpenAI chat completion with data.
+            More information: <see href="https://learn.microsoft.com/en-us/azure/ai-services/openai/use-your-data-quickstart"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig.CompletionModelId">
+            <summary>
+            Azure OpenAI model ID or deployment name, see <see href="https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig.CompletionEndpoint">
+            <summary>
+            Azure OpenAI deployment URL, see <see href="https://learn.microsoft.com/azure/cognitive-services/openai/quickstart"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig.CompletionApiKey">
+            <summary>
+            Azure OpenAI API key, see <see href="https://learn.microsoft.com/azure/cognitive-services/openai/quickstart"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig.CompletionApiVersion">
+            <summary>
+            Azure OpenAI Completion API version (e.g. 2023-06-01-preview)
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig.DataSourceEndpoint">
+            <summary>
+            Data source endpoint URL.
+            For Azure AI Search, see <see href="https://learn.microsoft.com/en-us/azure/search/search-create-service-portal"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig.DataSourceApiKey">
+            <summary>
+            Data source API key.
+            For Azure AI Search keys, see <see href="https://learn.microsoft.com/en-us/azure/search/search-security-api-keys#find-existing-keys"/>
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig.DataSourceIndex">
+            <summary>
+            Data source index name.
+            For Azure AI Search indexes, see <see href="https://learn.microsoft.com/en-us/azure/search/search-how-to-create-search-index"/>
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService">
+            <summary>
+            Azure OpenAI Chat Completion with data service.
+            More information: <see href="https://learn.microsoft.com/en-us/azure/ai-services/openai/use-your-data-quickstart"/>
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService.#ctor(Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService"/> class.
+            </summary>
+            <param name="config">Instance of <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig"/> class with completion configuration.</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">Instance of <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService.GetChatMessageContentsAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService.GetStreamingChatMessageContentsAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService.GetTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataService.GetStreamingTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore">
+            <summary>Base type for OpenAI text to image clients.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore.#ctor(System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore"/> class.
+            </summary>
+            <param name="httpClient">The HttpClient used for making HTTP requests.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore.Attributes">
+            <summary>
+            Storage for AI service attributes.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore.ExecuteImageGenerationRequestAsync(System.String,System.String,System.Func{Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageResponse.Image,System.String},System.Threading.CancellationToken)">
+            <summary>
+            Run the HTTP request to generate a list of images
+            </summary>
+            <param name="url">URL for the text to image request API</param>
+            <param name="requestBody">Request payload</param>
+            <param name="extractResponseFunc">Function to invoke to extract the desired portion of the text to image response.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>List of image URLs</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore.AddAttribute(System.String,System.String)">
+            <summary>
+            Add attribute to the internal attribute dictionary if the value is not null or empty.
+            </summary>
+            <param name="key">Attribute key</param>
+            <param name="value">Attribute value</param>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore._logger">
+            <summary>
+            Logger
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageClientCore._httpClient">
+            <summary>
+            The HttpClient used for making HTTP requests.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIMemoryBuilderExtensions">
+            <summary>
+            Provides extension methods for the <see cref="T:Microsoft.SemanticKernel.Memory.MemoryBuilder"/> class to configure OpenAI and AzureOpenAI connectors.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIMemoryBuilderExtensions.WithAzureOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.Memory.MemoryBuilder,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service.
+            See https://learn.microsoft.com/azure/cognitive-services/openai for service details.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.Memory.MemoryBuilder"/> instance</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="modelId">Model identifier</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <returns>Self instance</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIMemoryBuilderExtensions.WithAzureOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.Memory.MemoryBuilder,System.String,System.String,Azure.Core.TokenCredential,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service.
+            See https://learn.microsoft.com/azure/cognitive-services/openai for service details.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.Memory.MemoryBuilder"/> instance</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credential">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="modelId">Model identifier</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <returns>Self instance</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIMemoryBuilderExtensions.WithOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.Memory.MemoryBuilder,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds the OpenAI text embeddings service.
+            See https://platform.openai.com/docs for service details.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.Memory.MemoryBuilder"/> instance</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <returns>Self instance</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings">
+            <summary>
+            Execution settings for an OpenAI completion request.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.Temperature">
+            <summary>
+            Temperature controls the randomness of the completion.
+            The higher the temperature, the more random the completion.
+            Default is 1.0.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.TopP">
+            <summary>
+            TopP controls the diversity of the completion.
+            The higher the TopP, the more diverse the completion.
+            Default is 1.0.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.PresencePenalty">
+            <summary>
+            Number between -2.0 and 2.0. Positive values penalize new tokens
+            based on whether they appear in the text so far, increasing the
+            model's likelihood to talk about new topics.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.FrequencyPenalty">
+            <summary>
+            Number between -2.0 and 2.0. Positive values penalize new tokens
+            based on their existing frequency in the text so far, decreasing
+            the model's likelihood to repeat the same line verbatim.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.MaxTokens">
+            <summary>
+            The maximum number of tokens to generate in the completion.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.StopSequences">
+            <summary>
+            Sequences where the completion will stop generating further tokens.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.ResultsPerPrompt">
+            <summary>
+            How many completions to generate for each prompt. Default is 1.
+            Note: Because this parameter generates many completions, it can quickly consume your token quota.
+            Use carefully and ensure that you have reasonable settings for max_tokens and stop.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.Seed">
+            <summary>
+            If specified, the system will make a best effort to sample deterministically such that repeated requests with the
+            same seed and parameters should return the same result. Determinism is not guaranteed.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.ResponseFormat">
+            <summary>
+            Gets or sets the response format to use for the completion.
+            </summary>
+            <remarks>
+            Possible values are: "json_object", "text", <see cref="T:Azure.AI.OpenAI.ChatCompletionsResponseFormat"/> object.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.ChatSystemPrompt">
+            <summary>
+            The system prompt to use when generating text using a chat model.
+            Defaults to "Assistant is a large language model."
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.TokenSelectionBiases">
+            <summary>
+            Modify the likelihood of specified tokens appearing in the completion.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.ToolCallBehavior">
+            <summary>
+            Gets or sets the behavior for how tool calls are handled.
+            </summary>
+            <remarks>
+            <list type="bullet">
+            <item>To disable all tool calling, set the property to null (the default).</item>
+            <item>
+            To request that the model use a specific function, set the property to an instance returned
+            from <see cref="M:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.RequireFunction(Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction,System.Boolean)"/>.
+            </item>
+            <item>
+            To allow the model to request one of any number of functions, set the property to an
+            instance returned from <see cref="M:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.EnableFunctions(System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction},System.Boolean)"/>, called with
+            a list of the functions available.
+            </item>
+            <item>
+            To allow the model to request one of any of the functions in the supplied <see cref="T:Microsoft.SemanticKernel.Kernel"/>,
+            set the property to <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.EnableKernelFunctions"/> if the client should simply
+            send the information about the functions and not handle the response in any special manner, or
+            <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.AutoInvokeKernelFunctions"/> if the client should attempt to automatically
+            invoke the function and send the result back to the service.
+            </item>
+            </list>
+            For all options where an instance is provided, auto-invoke behavior may be selected. If the service
+            sends a request for a function call, if auto-invoke has been requested, the client will attempt to
+            resolve that function from the functions available in the <see cref="T:Microsoft.SemanticKernel.Kernel"/>, and if found, rather
+            than returning the response back to the caller, it will handle the request automatically, invoking
+            the function, and sending back the result. The intermediate messages will be retained in the
+            <see cref="T:Microsoft.SemanticKernel.ChatCompletion.ChatHistory"/> if an instance was provided.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.User">
+            <summary>
+            A unique identifier representing your end-user, which can help OpenAI to monitor and detect abuse
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.DefaultChatSystemPrompt">
+            <summary>
+            Default value for chat system property.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.DefaultTextMaxTokens">
+            <summary>
+            Default max tokens for a text generation
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.FromExecutionSettings(Microsoft.SemanticKernel.PromptExecutionSettings,System.Nullable{System.Int32})">
+            <summary>
+            Create a new settings object with the values from another settings object.
+            </summary>
+            <param name="executionSettings">Template configuration</param>
+            <param name="defaultMaxTokens">Default max tokens</param>
+            <returns>An instance of OpenAIPromptExecutionSettings</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.FromExecutionSettingsWithData(Microsoft.SemanticKernel.PromptExecutionSettings,System.Nullable{System.Int32})">
+            <summary>
+            Create a new settings object with the values from another settings object.
+            </summary>
+            <param name="executionSettings">Template configuration</param>
+            <param name="defaultMaxTokens">Default max tokens</param>
+            <returns>An instance of OpenAIPromptExecutionSettings</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService">
+            <summary>
+            Azure OpenAI text embedding service.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService.#ctor(System.String,System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService"/> client instance using API Key auth.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService.#ctor(System.String,System.String,Azure.Core.TokenCredential,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService"/> client instance supporting AAD auth.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credential">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService"/> client.
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/> for HTTP requests.</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextEmbeddingGenerationService.GenerateEmbeddingsAsync(System.Collections.Generic.IList{System.String},Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextEmbeddingGenerationService">
+            <summary>
+            OpenAI text embedding service.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextEmbeddingGenerationService.#ctor(System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the OpenAI text embedding connector
+            </summary>
+            <param name="modelId">Model name</param>
+            <param name="apiKey">OpenAI API Key</param>
+            <param name="organization">OpenAI Organization Id (usually optional)</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextEmbeddingGenerationService.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the OpenAI text embedding connector
+            </summary>
+            <param name="modelId">Model name</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextEmbeddingGenerationService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextEmbeddingGenerationService.GenerateEmbeddingsAsync(System.Collections.Generic.IList{System.String},Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService">
+            <summary>
+            Azure OpenAI text generation client.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService.#ctor(System.String,System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService"/> client instance using API Key auth
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService.#ctor(System.String,System.String,Azure.Core.TokenCredential,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService"/> client instance supporting AAD auth
+            </summary>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credential">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a new <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService"/> client instance using the specified OpenAIClient
+            </summary>
+            <param name="deploymentName">Azure OpenAI model ID or deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/>.</param>
+            <param name="modelId">Azure OpenAI model id, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService.GetTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextGenerationService.GetStreamingTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextGenerationService">
+            <summary>
+            OpenAI text generation service.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextGenerationService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextGenerationService.#ctor(System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the OpenAI text generation connector
+            </summary>
+            <param name="modelId">Model name</param>
+            <param name="apiKey">OpenAI API Key</param>
+            <param name="organization">OpenAI Organization Id (usually optional)</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextGenerationService.#ctor(System.String,Azure.AI.OpenAI.OpenAIClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance of the OpenAI text generation connector
+            </summary>
+            <param name="modelId">Model name</param>
+            <param name="openAIClient">Custom <see cref="T:Azure.AI.OpenAI.OpenAIClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextGenerationService.GetTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextGenerationService.GetStreamingTextContentsAsync(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextToImageService">
+            <summary>
+            Azure OpenAI Image generation
+            <see herf="https://learn.microsoft.com/en-us/azure/cognitive-services/openai/reference#image-generation" />
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextToImageService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextToImageService.DeploymentNameKey">
+            <summary>
+            Gets the key used to store the deployment name in the <see cref="P:Microsoft.SemanticKernel.Services.IAIService.Attributes"/> dictionary.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextToImageService.#ctor(System.String,System.String,System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory,System.String)">
+            <summary>
+            Create a new instance of Azure OpenAI image generation service
+            </summary>
+            <param name="deploymentName">Deployment name identifier</param>
+            <param name="endpoint">Azure OpenAI deployment URL</param>
+            <param name="apiKey">Azure OpenAI API key</param>
+            <param name="modelId">Model identifier</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The ILoggerFactory used to create a logger for logging. If null, no logging will be performed.</param>
+            <param name="apiVersion">Azure OpenAI Endpoint ApiVersion</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAITextToImageService.GenerateImageAsync(System.String,System.Int32,System.Int32,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService">
+            <summary>
+            OpenAI text to image service.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService.OpenAIEndpoint">
+            <summary>
+            OpenAI REST API endpoint
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService._organizationHeaderValue">
+            <summary>
+            Optional value for the OpenAI-Organization header.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService._authorizationHeaderValue">
+            <summary>
+            Value for the authorization header.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService.#ctor(System.String,System.String,System.Net.Http.HttpClient,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService"/> class.
+            </summary>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="organization">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="httpClient">Custom <see cref="T:System.Net.Http.HttpClient"/> for HTTP requests.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService.Attributes">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAITextToImageService.GenerateImageAsync(System.String,System.Int32,System.Int32,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageRequest">
+            <summary>
+            Text to image request
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageRequest.Prompt">
+            <summary>
+            Image prompt
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageRequest.Size">
+            <summary>
+            Image size
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageRequest.Count">
+            <summary>
+            How many images to generate
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageRequest.Format">
+            <summary>
+            Image format, "url" or "b64_json"
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageResponse">
+            <summary>
+            Text to image response
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageResponse.Image">
+            <summary>
+            OpenAI Image response
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageResponse.Image.Url">
+            <summary>
+            URL to the image created
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageResponse.Image.AsBase64">
+            <summary>
+            Image content in base64 format
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageResponse.Images">
+            <summary>
+            List of possible images
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.TextToImageResponse.CreatedTime">
+            <summary>
+            Creation time
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior">
+            <summary>Represents a behavior for OpenAI tool calls.</summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.DefaultMaximumAutoInvokeAttempts">
+            <summary>
+            The default maximum number of tool-call auto-invokes that can be made in a single request.
+            </summary>
+            <remarks>
+            After this number of iterations as part of a single user request is reached, auto-invocation
+            will be disabled (e.g. <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.AutoInvokeKernelFunctions"/> will behave like <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.EnableKernelFunctions"/>)).
+            This is a safeguard against possible runaway execution if the model routinely re-requests
+            the same function over and over. It is currently hardcoded, but in the future it could
+            be made configurable by the developer. Other configuration is also possible in the future,
+            such as a delegate on the instance that can be invoked upon function call failure (e.g. failure
+            to find the requested function, failure to invoke the function, etc.), with behaviors for
+            what to do in such a case, e.g. respond to the model telling it to try again. With parallel tool call
+            support, where the model can request multiple tools in a single response, it is significantly
+            less likely that this limit is reached, as most of the time only a single request is needed.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.EnableKernelFunctions">
+            <summary>
+            Gets an instance that will provide all of the <see cref="T:Microsoft.SemanticKernel.Kernel"/>'s plugins' function information.
+            Function call requests from the model will be propagated back to the caller.
+            </summary>
+            <remarks>
+            If no <see cref="T:Microsoft.SemanticKernel.Kernel"/> is available, no function information will be provided to the model.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.AutoInvokeKernelFunctions">
+            <summary>
+            Gets an instance that will both provide all of the <see cref="T:Microsoft.SemanticKernel.Kernel"/>'s plugins' function information
+            to the model and attempt to automatically handle any function call requests.
+            </summary>
+            <remarks>
+            When successful, tool call requests from the model become an implementation detail, with the service
+            handling invoking any requested functions and supplying the results back to the model.
+            If no <see cref="T:Microsoft.SemanticKernel.Kernel"/> is available, no function information will be provided to the model.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.EnableFunctions(System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction},System.Boolean)">
+            <summary>Gets an instance that will provide the specified list of functions to the model.</summary>
+            <param name="functions">The functions that should be made available to the model.</param>
+            <param name="autoInvoke">true to attempt to automatically handle function call requests; otherwise, false.</param>
+            <returns>
+            The <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior"/> that may be set into <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.ToolCallBehavior"/>
+            to indicate that the specified functions should be made available to the model.
+            </returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.RequireFunction(Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIFunction,System.Boolean)">
+            <summary>Gets an instance that will request the model to use the specified function.</summary>
+            <param name="function">The function the model should request to use.</param>
+            <param name="autoInvoke">true to attempt to automatically handle function call requests; otherwise, false.</param>
+            <returns>
+            The <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior"/> that may be set into <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIPromptExecutionSettings.ToolCallBehavior"/>
+            to indicate that the specified function should be requested by the model.
+            </returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.#ctor(System.Boolean)">
+            <summary>Initializes the instance; prevents external instantiation.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.MaximumUseAttempts">
+            <summary>Gets how many requests are part of a single interaction should include this tool in the request.</summary>
+            <remarks>
+            This should be greater than or equal to <see cref="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.MaximumAutoInvokeAttempts"/>. It defaults to <see cref="F:System.Int32.MaxValue"/>.
+            Once this limit is reached, the tools will no longer be included in subsequent retries as part of the operation, e.g.
+            if this is 1, the first request will include the tools, but the subsequent response sending back the tool's result
+            will not include the tools for further use.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.MaximumAutoInvokeAttempts">
+            <summary>Gets how many tool call request/response roundtrips are supported with auto-invocation.</summary>
+            <remarks>
+            To disable auto invocation, this can be set to 0.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.AllowAnyRequestedKernelFunction">
+            <summary>
+            Gets whether validation against a specified list is required before allowing the model to request a function from the kernel.
+            </summary>
+            <value>true if it's ok to invoke any kernel function requested by the model if it's found; false if a request needs to be validated against an allow list.</value>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.ConfigureOptions(Microsoft.SemanticKernel.Kernel,Azure.AI.OpenAI.ChatCompletionsOptions)">
+            <summary>Configures the <paramref name="options"/> with any tools this <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior"/> provides.</summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> used for the operation. This can be queried to determine what tools to provide into the <paramref name="options"/>.</param>
+            <param name="options">The destination <see cref="T:Azure.AI.OpenAI.ChatCompletionsOptions"/> to configure.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.KernelFunctions">
+            <summary>
+            Represents a <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior"/> that will provide to the model all available functions from a
+            <see cref="T:Microsoft.SemanticKernel.Kernel"/> provided by the client.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.EnabledFunctions">
+            <summary>
+            Represents a <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior"/> that provides a specified list of functions to the model.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.RequiredFunction">
+            <summary>Represents a <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior"/> that requests the model use a specific function.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.RequiredFunction.MaximumUseAttempts">
+            <summary>Gets how many requests are part of a single interaction should include this tool in the request.</summary>
+            <remarks>
+            Unlike <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.EnabledFunctions"/> and <see cref="T:Microsoft.SemanticKernel.Connectors.OpenAI.ToolCallBehavior.KernelFunctions"/>, this must use 1 as the maximum
+            use attempts. Otherwise, every call back to the model _requires_ it to invoke the function (as opposed
+            to allows it), which means we end up doing the same work over and over and over until the maximum is reached.
+            Thus for "requires", we must send the tool information only once.
+            </remarks>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.ChatHistoryExtensions">
+            <summary>
+            Chat history extensions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.ChatHistoryExtensions.AddStreamingMessageAsync(Microsoft.SemanticKernel.ChatCompletion.ChatHistory,System.Collections.Generic.IAsyncEnumerable{Microsoft.SemanticKernel.Connectors.OpenAI.OpenAIStreamingChatMessageContent})">
+            <summary>
+            Add a message to the chat history at the end of the streamed message
+            </summary>
+            <param name="chatHistory">Target chat history</param>
+            <param name="streamingMessageContents"><see cref="T:System.Collections.Generic.IAsyncEnumerator`1"/> list of streaming message contents</param>
+            <returns>Returns the original streaming results with some message processing</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> and related classes to configure OpenAI and Azure OpenAI connectors.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds an Azure OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,Azure.Core.TokenCredential,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds an Azure OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,Azure.Core.TokenCredential,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,Azure.AI.OpenAI.OpenAIClient,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Azure.AI.OpenAI.OpenAIClient,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds an OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String,System.String)">
+            <summary>
+            Adds an OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,Azure.AI.OpenAI.OpenAIClient,System.String)">
+            <summary>
+            Adds an OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Azure.AI.OpenAI.OpenAIClient,System.String)">
+            <summary>
+            Adds an OpenAI text generation service with the specified configuration.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextEmbeddingGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,Azure.Core.TokenCredential,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credential">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextEmbeddingGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,Azure.Core.TokenCredential,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credential">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,Azure.AI.OpenAI.OpenAIClient,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextEmbeddingGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Azure.AI.OpenAI.OpenAIClient,System.String,System.String)">
+            <summary>
+            Adds an Azure OpenAI text embeddings service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds the OpenAI text embeddings service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextEmbeddingGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String,System.String)">
+            <summary>
+            Adds the OpenAI text embeddings service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextEmbeddingGeneration(Microsoft.SemanticKernel.IKernelBuilder,System.String,Azure.AI.OpenAI.OpenAIClient,System.String)">
+            <summary>
+            Adds the OpenAI text embeddings service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextEmbeddingGeneration(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Azure.AI.OpenAI.OpenAIClient,System.String)">
+            <summary>
+            Adds the OpenAI text embeddings service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="modelId">The OpenAI model id.</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds the Azure OpenAI chat completion service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Adds the Azure OpenAI chat completion service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="apiKey">Azure OpenAI API key, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,Azure.Core.TokenCredential,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds the Azure OpenAI chat completion service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,Azure.Core.TokenCredential,System.String,System.String)">
+            <summary>
+            Adds the Azure OpenAI chat completion service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="endpoint">Azure OpenAI deployment URL, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <param name="credentials">Token credentials, e.g. DefaultAzureCredential, ManagedIdentityCredential, EnvironmentCredential, etc.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.SemanticKernel.IKernelBuilder,System.String,Azure.AI.OpenAI.OpenAIClient,System.String,System.String)">
+            <summary>
+            Adds the Azure OpenAI chat completion service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Azure.AI.OpenAI.OpenAIClient,System.String,System.String)">
+            <summary>
+            Adds the Azure OpenAI chat completion service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name, see https://learn.microsoft.com/azure/cognitive-services/openai/how-to/create-resource</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier, see https://learn.microsoft.com/azure/cognitive-services/openai/quickstart</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.SemanticKernel.IKernelBuilder,Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig,System.String)">
+            <summary>
+            Adds the Azure OpenAI chat completion with data service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance.</param>
+            <param name="config">Required configuration for Azure OpenAI chat completion with data.</param>
+            <param name="serviceId">A local identifier for the given AI service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+            <remarks>
+            More information: <see href="https://learn.microsoft.com/en-us/azure/ai-services/openai/use-your-data-quickstart"/>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAIChatCompletion(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.SemanticKernel.Connectors.OpenAI.AzureOpenAIChatCompletionWithDataConfig,System.String)">
+            <summary>
+            Adds the Azure OpenAI chat completion with data service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance.</param>
+            <param name="config">Required configuration for Azure OpenAI chat completion with data.</param>
+            <param name="serviceId">A local identifier for the given AI service.</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+            <remarks>
+            More information: <see href="https://learn.microsoft.com/en-us/azure/ai-services/openai/use-your-data-quickstart"/>
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAIChatCompletion(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Adds the OpenAI chat completion service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAIChatCompletion(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String,System.String)">
+            <summary>
+            Adds the OpenAI chat completion service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="modelId">OpenAI model name, see https://platform.openai.com/docs/models</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAIChatCompletion(Microsoft.SemanticKernel.IKernelBuilder,System.String,Azure.AI.OpenAI.OpenAIClient,System.String)">
+            <summary>
+            Adds the OpenAI chat completion service to the list.
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="modelId">OpenAI model id</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAIChatCompletion(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,Azure.AI.OpenAI.OpenAIClient,System.String)">
+            <summary>
+            Adds the OpenAI chat completion service to the list.
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="modelId">OpenAI model id</param>
+            <param name="openAIClient"><see cref="T:Azure.AI.OpenAI.OpenAIClient"/> to use for the service. If null, one must be available in the service provider when this service is resolved.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextToImage(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Add the  Azure OpenAI DallE text to image service to the list
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.SemanticKernel.IKernelBuilder"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name</param>
+            <param name="endpoint">Azure OpenAI deployment URL</param>
+            <param name="apiKey">Azure OpenAI API key</param>
+            <param name="modelId">Model identifier</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="apiVersion">Azure OpenAI API version</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddAzureOpenAITextToImage(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Add the  Azure OpenAI DallE text to image service to the list
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="deploymentName">Azure OpenAI deployment name</param>
+            <param name="endpoint">Azure OpenAI deployment URL</param>
+            <param name="apiKey">Azure OpenAI API key</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="modelId">Model identifier</param>
+            <param name="maxRetryCount">Maximum number of attempts to retrieve the text to image operation result.</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextToImage(Microsoft.SemanticKernel.IKernelBuilder,System.String,System.String,System.String,System.Net.Http.HttpClient)">
+            <summary>
+            Add the OpenAI Dall-E text to image service to the list
+            </summary>
+            <param name="builder">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <param name="httpClient">The HttpClient to use with this service.</param>
+            <returns>The same instance as <paramref name="builder"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.OpenAIServiceCollectionExtensions.AddOpenAITextToImage(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.String,System.String,System.String)">
+            <summary>
+            Add the OpenAI Dall-E text to image service to the list
+            </summary>
+            <param name="services">The <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> instance to augment.</param>
+            <param name="apiKey">OpenAI API key, see https://platform.openai.com/account/api-keys</param>
+            <param name="orgId">OpenAI organization id. This is usually optional unless your account belongs to multiple organizations.</param>
+            <param name="serviceId">A local identifier for the given AI service</param>
+            <returns>The same instance as <paramref name="services"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Verify.NotNull(System.Object,System.String)">
+            <summary>
+            Equivalent of ArgumentNullException.ThrowIfNull
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Verify.ParametersUniqueness(System.Collections.Generic.IReadOnlyList{Microsoft.SemanticKernel.KernelParameterMetadata})">
+            <summary>
+            Make sure every function parameter name is unique
+            </summary>
+            <param name="parameters">List of parameters</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientExtensions.SendWithSuccessCheckAsync(System.Net.Http.HttpClient,System.Net.Http.HttpRequestMessage,System.Net.Http.HttpCompletionOption,System.Threading.CancellationToken)">
+            <summary>
+            Sends an HTTP request using the provided <see cref="T:System.Net.Http.HttpClient"/> instance and checks for a successful response.
+            If the response is not successful, it logs an error and throws an <see cref="T:Microsoft.SemanticKernel.HttpOperationException"/>.
+            </summary>
+            <param name="client">The <see cref="T:System.Net.Http.HttpClient"/> instance to use for sending the request.</param>
+            <param name="request">The <see cref="T:System.Net.Http.HttpRequestMessage"/> to send.</param>
+            <param name="completionOption">Indicates if HttpClient operations should be considered completed either as soon as a response is available,
+            or after reading the entire response message including the content.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> for canceling the request.</param>
+            <returns>The <see cref="T:System.Net.Http.HttpResponseMessage"/> representing the response.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientExtensions.SendWithSuccessCheckAsync(System.Net.Http.HttpClient,System.Net.Http.HttpRequestMessage,System.Threading.CancellationToken)">
+            <summary>
+            Sends an HTTP request using the provided <see cref="T:System.Net.Http.HttpClient"/> instance and checks for a successful response.
+            If the response is not successful, it logs an error and throws an <see cref="T:Microsoft.SemanticKernel.HttpOperationException"/>.
+            </summary>
+            <param name="client">The <see cref="T:System.Net.Http.HttpClient"/> instance to use for sending the request.</param>
+            <param name="request">The <see cref="T:System.Net.Http.HttpRequestMessage"/> to send.</param>
+            <param name="cancellationToken">A <see cref="T:System.Threading.CancellationToken"/> for canceling the request.</param>
+            <returns>The <see cref="T:System.Net.Http.HttpResponseMessage"/> representing the response.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Http.HttpClientProvider">
+            <summary>
+            Provides functionality for retrieving instances of HttpClient.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientProvider.GetHttpClient">
+            <summary>
+            Retrieves an instance of HttpClient.
+            </summary>
+            <returns>An instance of HttpClient.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientProvider.GetHttpClient(System.Net.Http.HttpClient)">
+            <summary>
+            Retrieves an instance of HttpClient.
+            </summary>
+            <returns>An instance of HttpClient.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientProvider.GetHttpClient(System.IServiceProvider)">
+            <summary>
+            Retrieves an instance of HttpClient.
+            </summary>
+            <returns>An instance of HttpClient.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientProvider.GetHttpClient(System.Net.Http.HttpClient,System.IServiceProvider)">
+            <summary>
+            Retrieves an instance of HttpClient.
+            </summary>
+            <returns>An instance of HttpClient.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Http.HttpClientProvider.NonDisposableHttpClientHandler">
+            <summary>
+            Represents a singleton implementation of <see cref="T:System.Net.Http.HttpClientHandler"/> that is not disposable.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientProvider.NonDisposableHttpClientHandler.#ctor">
+            <summary>
+            Private constructor to prevent direct instantiation of the class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Http.HttpClientProvider.NonDisposableHttpClientHandler.Instance">
+            <summary>
+            Gets the singleton instance of <see cref="T:Microsoft.SemanticKernel.Http.HttpClientProvider.NonDisposableHttpClientHandler"/>.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpClientProvider.NonDisposableHttpClientHandler.Dispose(System.Boolean)">
+            <summary>
+            Disposes the underlying resources held by the <see cref="T:Microsoft.SemanticKernel.Http.HttpClientProvider.NonDisposableHttpClientHandler"/>.
+            This implementation does nothing to prevent unintended disposal, as it may affect all references.
+            </summary>
+            <param name="disposing">True if called from <see cref="M:Microsoft.SemanticKernel.Http.HttpClientProvider.NonDisposableHttpClientHandler.Dispose(System.Boolean)"/>, false if called from a finalizer.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Http.HttpContentExtensions">
+            <summary>
+            Provides extension methods for working with HTTP content in a way that translates HttpRequestExceptions into HttpOperationExceptions.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpContentExtensions.ReadAsStringWithExceptionMappingAsync(System.Net.Http.HttpContent)">
+            <summary>
+            Reads the content of the HTTP response as a string and translates any HttpRequestException into an HttpOperationException.
+            </summary>
+            <param name="httpContent">The HTTP content to read.</param>
+            <returns>A string representation of the HTTP content.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpContentExtensions.ReadAsStreamAndTranslateExceptionAsync(System.Net.Http.HttpContent)">
+            <summary>
+            Reads the content of the HTTP response as a stream and translates any HttpRequestException into an HttpOperationException.
+            </summary>
+            <param name="httpContent">The HTTP content to read.</param>
+            <returns>A stream representing the HTTP content.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Http.HttpContentExtensions.ReadAsByteArrayAndTranslateExceptionAsync(System.Net.Http.HttpContent)">
+            <summary>
+            Reads the content of the HTTP response as a byte array and translates any HttpRequestException into an HttpOperationException.
+            </summary>
+            <param name="httpContent">The HTTP content to read.</param>
+            <returns>A byte array representing the HTTP content.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Http.HttpHeaderValues">
+            <summary>Provides HTTP header values for common purposes.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Http.HttpHeaderValues.UserAgent">
+            <summary>User agent string to use for all HTTP requests issued by Semantic Kernel.</summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.InternalTypeConverter">
+            <summary>
+            Provides internal utility methods for converting types to strings with consideration for CultureInfo.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.InternalTypeConverter.ConvertToString(System.Object,System.Globalization.CultureInfo)">
+            <summary>
+            Converts the given object value to a string representation using the appropriate CultureInfo.
+            </summary>
+            <param name="value">The object to convert.</param>
+            <param name="culture">The CultureInfo to consider during conversion.</param>
+            <returns>A string representation of the object value, considering the specified CultureInfo.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.InternalTypeConverter.GetTypeToStringConverterDelegate(System.Type)">
+            <summary>
+            Retrieves a type-to-string converter delegate for the specified source type.
+            </summary>
+            <param name="sourceType">The source Type for which to retrieve the type-to-string converter delegate.</param>
+            <returns>A Func delegate for converting the source type to a string, considering CultureInfo, or null if no suitable converter is found.</returns>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.InternalTypeConverter.s_converters">
+            <summary>Converter functions for converting types to strings.</summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.NonNullCollection`1">
+            <summary>
+            Provides a collection of non-null items.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.NonNullCollection`1._items">
+            <summary>
+            The underlying list of items.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.NonNullCollection`1"/> class.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.NonNullCollection`1"/> class.
+            </summary>
+            <param name="items">The initial collection of items to populate this collection.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.NonNullCollection`1.Item(System.Int32)">
+            <summary>
+            Gets or sets the item at the specified index in the collection.
+            </summary>
+            <param name="index">The index of the item to get or set.</param>
+            <returns>The item at the specified index.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="value"/> is null.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException">The <paramref name="index"/> was not valid for this collection.</exception>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.NonNullCollection`1.Count">
+            <summary>
+            Gets the number of items in the collection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.Add(`0)">
+            <summary>
+            Adds an item to the collection.
+            </summary>
+            <param name="item">The item to add.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.Clear">
+            <summary>
+            Removes all items from the collection.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.Contains(`0)">
+            <summary>
+            Determines whether an item is in the collection.
+            </summary>
+            <param name="item">The item to locate.</param>
+            <returns>True if the item is found in the collection; otherwise, false.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.CopyTo(`0[],System.Int32)">
+            <summary>
+            Copies all of the items in the collection to an array, starting at the specified destination array index.
+            </summary>
+            <param name="array">The destination array into which the items should be copied.</param>
+            <param name="arrayIndex">The zero-based index into <paramref name="array"/> at which copying should begin.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="array"/> is null.</exception>
+            <exception cref="T:System.ArgumentException">The number of items in the collection is greater than the available space from <paramref name="arrayIndex"/> to the end of <paramref name="array"/>.</exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"><paramref name="arrayIndex"/> is less than 0.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.IndexOf(`0)">
+            <summary>
+            Searches for the specified item and returns the index of the first occurrence.
+            </summary>
+            <param name="item">The item to locate.</param>
+            <returns>The index of the first found occurrence of the specified item; -1 if the item could not be found.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.Insert(System.Int32,`0)">
+            <summary>
+            Inserts an item into the collection at the specified index.
+            </summary>
+            <param name="index">The index at which the item should be inserted.</param>
+            <param name="item">The item to insert.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.Remove(`0)">
+            <summary>
+            Removes the first occurrence of the specified item from the collection.
+            </summary>
+            <param name="item">The item to remove from the collection.</param>
+            <returns>True if the item was successfully removed; false if it wasn't located in the collection.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="item"/> is null.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.NonNullCollection`1.RemoveAt(System.Int32)">
+            <summary>
+            Removes the item at the specified index from the collection.
+            </summary>
+            <param name="index">The index of the item to remove.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.TypeConverterFactory">
+            <summary>
+            Factory for creating TypeConverter instances based on a provided type.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TypeConverterFactory.GetTypeConverter(System.Type)">
+            <summary>
+            Returns a TypeConverter instance for the specified type.
+            </summary>
+            <param name="type">The Type of the object to convert.</param>
+            <returns>A TypeConverter instance if a suitable converter is found, otherwise null.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Text.JsonOptionsCache">
+            <summary>Caches common configurations of <see cref="T:System.Text.Json.JsonSerializerOptions"/>.</summary>\
+            <remarks>
+            All of the instances include a converter for <see cref="T:System.ReadOnlyMemory`1"/>.
+            Once the System.Text.Json package is upgraded to 8.0+, this will no longer be
+            necessary and the actual default can be used.
+            </remarks>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Text.JsonOptionsCache.ReadOnlyMemoryConverter">
+            <summary>Singleton for <see cref="P:Microsoft.SemanticKernel.Text.JsonOptionsCache.ReadOnlyMemoryConverter"/>.</summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Text.JsonOptionsCache.Default">
+            <summary>
+            Cached <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance for reading and writing JSON using the default settings.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Text.JsonOptionsCache.WriteIndented">
+            <summary>
+            Cached <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance for writing JSON with indentation.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.Text.JsonOptionsCache.ReadPermissive">
+            <summary>
+            Cached <see cref="T:System.Text.Json.JsonSerializerOptions"/> instance for reading JSON in a permissive way,
+            including support for trailing commas, case-insensitive property names, and comments.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Text.ReadOnlyMemoryConverter">
+            <summary>Provides a converter for <see cref="T:System.ReadOnlyMemory`1"/>.</summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.Text.ReadOnlyMemoryConverter.s_arrayConverter">
+            <summary>An instance of a converter for float[] that all operations delegate to.</summary>
+        </member>
+        <member name="T:System.Runtime.CompilerServices.IsExternalInit">
+            <summary>
+            Reserved to be used by the compiler for tracking metadata.
+            This class should not be used by developers in source code.
+            </summary>
+        </member>
+        <member name="T:System.ExceptionExtensions">
+            <summary>
+            Exception extension methods.
+            </summary>
+        </member>
+        <member name="M:System.ExceptionExtensions.IsCriticalException(System.Exception)">
+            <summary>
+            Check if an exception is of a type that should not be caught by the kernel.
+            </summary>
+            <param name="ex">Exception.</param>
+            <returns>True if <paramref name="ex"/> is a critical exception and should not be caught.</returns>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.ExperimentalAttribute">
+            <summary>
+             Indicates that an API is experimental and it may change in the future.
+            </summary>
+            <remarks>
+              This attribute allows call sites to be flagged with a diagnostic that indicates that an experimental
+              feature is used. Authors can use this attribute to ship preview features in their assemblies.
+            </remarks>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.#ctor(System.String)">
+            <summary>
+             Initializes a new instance of the <see cref="T:System.Diagnostics.CodeAnalysis.ExperimentalAttribute"/> class, specifying the ID that the compiler will use
+             when reporting a use of the API the attribute applies to.
+            </summary>
+            <param name="diagnosticId">The ID that the compiler will use when reporting a use of the API the attribute applies to.</param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.DiagnosticId">
+            <summary>
+             Gets the ID that the compiler will use when reporting a use of the API the attribute applies to.
+            </summary>
+            <value>The unique diagnostic ID.</value>
+            <remarks>
+             The diagnostic ID is shown in build output for warnings and errors.
+             <para>This property represents the unique ID that can be used to suppress the warnings or errors, if needed.</para>
+            </remarks>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.ExperimentalAttribute.UrlFormat">
+            <summary>
+             Gets or sets the URL for corresponding documentation.
+             The API accepts a format string instead of an actual URL, creating a generic URL that includes the diagnostic ID.
+            </summary>
+            <value>The format string that represents a URL to corresponding documentation.</value>
+            <remarks>An example format string is <c>https://contoso.com/obsoletion-warnings/{0}</c>.</remarks>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.AllowNullAttribute">
+            <summary>Specifies that null is allowed as an input even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DisallowNullAttribute">
+            <summary>Specifies that null is disallowed as an input even if the corresponding type allows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullAttribute">
+            <summary>Specifies that an output may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullAttribute">
+            <summary>Specifies that an output will not be null even if the corresponding type allows it.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue"/>, the parameter may be null even if the corresponding type disallows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter may be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MaybeNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute">
+            <summary>Specifies that when a method returns <see cref="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified return value condition.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute">
+            <summary>Specifies that the output will be non-null if the named parameter is non-null.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.#ctor(System.String)">
+            <summary>Initializes the attribute with the associated parameter name.</summary>
+            <param name="parameterName">
+            The associated parameter name.  The output will be non-null if the argument to the parameter specified is non-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.NotNullIfNotNullAttribute.ParameterName">
+            <summary>Gets the associated parameter name.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnAttribute">
+            <summary>Applied to a method that will never return under any circumstance.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute">
+            <summary>Specifies that the method will not return if the associated Boolean parameter is passed the specified value.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.#ctor(System.Boolean)">
+            <summary>Initializes the attribute with the specified parameter value.</summary>
+            <param name="parameterValue">
+            The condition parameter value. Code after the method will be considered unreachable by diagnostics if the argument to
+            the associated parameter matches this value.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.DoesNotReturnIfAttribute.ParameterValue">
+            <summary>Gets the condition parameter value.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute">
+            <summary>Specifies that the method or property will ensure that the listed field and property members have not-null values.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String)">
+            <summary>Initializes the attribute with a field or property member.</summary>
+            <param name="member">
+            The field or property member that is promised to be not-null.
+            </param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.#ctor(System.String[])">
+            <summary>Initializes the attribute with the list of field and property members.</summary>
+            <param name="members">
+            The list of field and property members that are promised to be not-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullAttribute.Members">
+            <summary>Gets field or property member names.</summary>
+        </member>
+        <member name="T:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute">
+            <summary>Specifies that the method or property will ensure that the listed field and property members have not-null values when returning with the specified return value condition.</summary>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String)">
+            <summary>Initializes the attribute with the specified return value condition and a field or property member.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="member">
+            The field or property member that is promised to be not-null.
+            </param>
+        </member>
+        <member name="M:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.#ctor(System.Boolean,System.String[])">
+            <summary>Initializes the attribute with the specified return value condition and list of field and property members.</summary>
+            <param name="returnValue">
+            The return value condition. If the method returns this value, the associated parameter will not be null.
+            </param>
+            <param name="members">
+            The list of field and property members that are promised to be not-null.
+            </param>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.ReturnValue">
+            <summary>Gets the return value condition.</summary>
+        </member>
+        <member name="P:System.Diagnostics.CodeAnalysis.MemberNotNullWhenAttribute.Members">
+            <summary>Gets field or property member names.</summary>
+        </member>
+        <member name="M:System.Linq.AsyncEnumerable.AnyAsync``1(System.Collections.Generic.IAsyncEnumerable{``0},System.Func{``0,System.Boolean},System.Threading.CancellationToken)">
+            <summary>
+            Determines whether any element of an async-enumerable sequence satisfies a condition.
+            </summary>
+            <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+            <param name="source">An async-enumerable sequence whose elements to apply the predicate to.</param>
+            <param name="predicate">A function to test each element for a condition.</param>
+            <param name="cancellationToken">The optional cancellation token to be used for cancelling the sequence at any time.</param>
+            <returns>An async-enumerable sequence containing a single element determining whether any elements in the source sequence pass the test in the specified predicate.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="source"/> or <paramref name="predicate"/> is null.</exception>
+            <remarks>The return type of this operator differs from the corresponding operator on IEnumerable in order to retain asynchronous behavior.</remarks>
+        </member>
+        <member name="M:System.EnvExtensions.GetBoolEnvVar(System.String)">
+            <summary>
+            Source: https://github.com/Azure/azure-sdk-for-net/blob/main/sdk/core/Azure.Core/src/DiagnosticsOptions.cs
+            Values: https://learn.microsoft.com/en-us/dotnet/api/azure.core.diagnosticsoptions.istelemetryenabled?view=azure-dotnet
+            </summary>
+        </member>
+        <member name="T:System.TypeExtensions">
+            <summary>
+            Extensions methods for <see cref="T:System.Type"/>.
+            </summary>
+        </member>
+        <member name="M:System.TypeExtensions.TryGetGenericResultType(System.Type,System.Type@)">
+            <summary>
+            Tries to get the result type from a generic parameter.
+            </summary>
+            <param name="returnType">Return type.</param>
+            <param name="resultType">The result type of the Nullable generic parameter.</param>
+            <returns><c>true</c> if the result type was successfully retrieved; otherwise, <c>false</c>.</returns>
+            TODO [@teresaqhoang]: Issue #4202 Cache Generic Types Extraction - Handlebars
+        </member>
+    </members>
+</doc>

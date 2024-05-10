@@ -1,0 +1,1287 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.SemanticKernel.Core</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.SemanticKernel.StreamingMethodContent">
+            <summary>
+            Represents a manufactured streaming content from a single function result.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.StreamingMethodContent.Content">
+            <summary>
+            Gets the result of the function invocation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.StreamingMethodContent.ToByteArray">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.StreamingMethodContent.ToString">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.StreamingMethodContent.#ctor(System.Object,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.StreamingMethodContent"/> class.
+            </summary>
+            <param name="innerContent">Underlying object that represents the chunk content.</param>
+            <param name="metadata">Additional metadata associated with the content.</param>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.DefaultKernelPlugin">
+            <summary>
+            Provides an <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> implementation around a collection of functions.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.DefaultKernelPlugin._functions">
+            <summary>The collection of functions associated with this plugin.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.DefaultKernelPlugin.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Initializes the new plugin from the provided name, description, and function collection.</summary>
+            <param name="name">The name for the plugin.</param>
+            <param name="description">A description of the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <exception cref="T:System.ArgumentException"><paramref name="name"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="name"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.DefaultKernelPlugin.FunctionCount">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.DefaultKernelPlugin.TryGetFunction(System.String,Microsoft.SemanticKernel.KernelFunction@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.DefaultKernelPlugin.GetEnumerator">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelFunctionFactory">
+            <summary>
+            Provides factory methods for creating commonly-used implementations of <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>, such as
+            those backed by a prompt to be submitted to an LLM or those backed by a .NET method.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFactory.CreateFromMethod(System.Delegate,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelParameterMetadata},Microsoft.SemanticKernel.KernelReturnParameterMetadata,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a method, specified via a delegate.
+            </summary>
+            <param name="method">The method to be represented via the created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>.</param>
+            <param name="functionName">The name to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="description">The description to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>, if possible (e.g. via a <see cref="T:System.ComponentModel.DescriptionAttribute"/> on the method).</param>
+            <param name="parameters">Optional parameter descriptions. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking <paramref name="method"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFactory.CreateFromMethod(System.Reflection.MethodInfo,System.Object,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelParameterMetadata},Microsoft.SemanticKernel.KernelReturnParameterMetadata,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a method, specified via an <see cref="T:System.Reflection.MethodInfo"/> instance
+            and an optional target object if the method is an instance method.
+            </summary>
+            <param name="method">The method to be represented via the created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>.</param>
+            <param name="target">The target object for the <paramref name="method"/> if it represents an instance method. This should be null if and only if <paramref name="method"/> is a static method.</param>
+            <param name="functionName">The name to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="description">The description to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>, if possible (e.g. via a <see cref="T:System.ComponentModel.DescriptionAttribute"/> on the method).</param>
+            <param name="parameters">Optional parameter descriptions. If null, it will default to ones derived from the method represented by <paramref name="method"/>.</param>
+            <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking <paramref name="method"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFactory.CreateFromPrompt(System.String,Microsoft.SemanticKernel.PromptExecutionSettings,System.String,System.String,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template.
+            </summary>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="executionSettings">Default execution settings to use when invoking this prompt function.</param>
+            <param name="functionName">The name to use for the function. If null, it will default to a randomly generated name.</param>
+            <param name="description">The description to use for the function.</param>
+            <param name="templateFormat">The template format of <paramref name="promptTemplate"/>. This must be provided if <paramref name="promptTemplateFactory"/> is not null.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptTemplate"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking the prompt.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFactory.CreateFromPrompt(Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.SemanticKernel.IPromptTemplateFactory,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template configuration.
+            </summary>
+            <param name="promptConfig">Configuration information describing the prompt.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptConfig"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking the prompt.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFactory.CreateFromPrompt(Microsoft.SemanticKernel.IPromptTemplate,Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template and prompt template configuration.
+            </summary>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="promptConfig">Configuration information describing the prompt.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking the prompt.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFactory.CreateSettingsDictionary(Microsoft.SemanticKernel.PromptExecutionSettings)">
+            <summary>
+            Wraps the specified settings into a dictionary with the default service ID as the key.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelFunctionFromMethod">
+            <summary>
+            Provides factory methods for creating <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instances backed by a .NET method.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.Create(System.Reflection.MethodInfo,System.Object,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelParameterMetadata},Microsoft.SemanticKernel.KernelReturnParameterMetadata,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a method, specified via an <see cref="T:System.Reflection.MethodInfo"/> instance
+            and an optional target object if the method is an instance method.
+            </summary>
+            <param name="method">The method to be represented via the created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>.</param>
+            <param name="target">The target object for the <paramref name="method"/> if it represents an instance method. This should be null if and only if <paramref name="method"/> is a static method.</param>
+            <param name="functionName">The name to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="description">The description to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>, if possible (e.g. via a <see cref="T:System.ComponentModel.DescriptionAttribute"/> on the method).</param>
+            <param name="parameters">Optional parameter descriptions. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> wrapper for <paramref name="method"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.InvokeCoreAsync(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.KernelArguments,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.InvokeStreamingCoreAsync``1(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.KernelArguments,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.ToString">
+            <summary>
+            JSON serialized string representation of the function.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelFunctionFromMethod.ImplementationFunc">
+            <summary>Delegate used to invoke the underlying delegate.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.IsAsyncMethod(System.Reflection.MethodInfo)">
+            <summary>Gets whether a method has a known async return type.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.GetParameterMarshalerDelegate(System.Reflection.MethodInfo,System.Reflection.ParameterInfo,System.Boolean@)">
+            <summary>
+            Gets a delegate for handling the marshaling of a parameter.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.TryToDeserializeValue(System.Object,System.Type,System.Object@)">
+            <summary>
+            Tries to deserialize the given value into an object of the specified target type.
+            </summary>
+            <param name="value">The value to be deserialized.</param>
+            <param name="targetType">The type of the object to deserialize the value into.</param>
+            <param name="deserializedValue">The deserialized object if the method succeeds; otherwise, null.</param>
+            <returns>true if the value is successfully deserialized; otherwise, false.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.GetReturnValueMarshalerDelegate(System.Reflection.MethodInfo)">
+            <summary>
+            Gets a delegate for handling the result value of a method, converting it into the <see cref="T:System.Threading.Tasks.Task`1"/> to return from the invocation.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.Invoke(System.Reflection.MethodInfo,System.Object,System.Object[])">
+            <summary>Invokes the MethodInfo with the specified target object and arguments.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.GetExceptionForInvalidSignature(System.Reflection.MethodInfo,System.String)">
+            <summary>Gets an exception that can be thrown indicating an invalid signature.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.ThrowForInvalidSignatureIf(System.Boolean,System.Reflection.MethodInfo,System.String)">
+            <summary>Throws an exception indicating an invalid KernelFunctionFactory signature if the specified condition is not met.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.GetConverter(System.Type)">
+            <summary>
+            Gets a converter for type to ty conversion. For example, string to int, string to Guid, double to int, CustomType to string, etc.
+            </summary>
+            <param name="targetType">Specifies the target type into which a source type should be converted.</param>
+            <returns>The converter function if the target type is supported; otherwise, null.</returns>
+            <remarks>
+            The conversion function uses whatever TypeConverter is registered for the target type.
+            Conversion is first attempted using the current culture, and if that fails, it tries again
+            with the invariant culture. If both fail, an exception is thrown.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromMethod.SanitizeMetadataName(System.String)">
+            <summary>
+            Remove characters from method name that are valid in metadata but invalid for SK.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.KernelFunctionFromMethod.s_invalidNameCharsRegex">
+            <summary>Regex that flags any character other than ASCII digits or letters or the underscore.</summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.KernelFunctionFromMethod.s_parsers">
+            <summary>Parser functions for converting strings to parameter types.</summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt">
+            <summary>
+            A Semantic Kernel "Semantic" prompt function.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.Create(System.String,System.Collections.Generic.Dictionary{System.String,Microsoft.SemanticKernel.PromptExecutionSettings},System.String,System.String,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template.
+            </summary>
+            <param name="promptTemplate">Prompt template for the function, defined using the <see cref="P:Microsoft.SemanticKernel.PromptTemplateConfig.SemanticKernelTemplateFormat"/> template format.</param>
+            <param name="executionSettings">Default execution settings to use when invoking this prompt function.</param>
+            <param name="functionName">A name for the given function. The name can be referenced in templates and used by the pipeline planner.</param>
+            <param name="description">The description to use for the function.</param>
+            <param name="templateFormat">Optional format of the template. Must be provided if a prompt template factory is provided</param>
+            <param name="promptTemplateFactory">Optional: Prompt template factory</param>
+            <param name="loggerFactory">Logger factory</param>
+            <returns>A function ready to use</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.Create(Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.SemanticKernel.IPromptTemplateFactory,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template configuration.
+            </summary>
+            <param name="promptConfig">Prompt template configuration</param>
+            <param name="promptTemplateFactory">Optional: Prompt template factory</param>
+            <param name="loggerFactory">Logger factory</param>
+            <returns>A function ready to use</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.Create(Microsoft.SemanticKernel.IPromptTemplate,Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template and a prompt template configuration.
+            </summary>
+            <param name="promptTemplate">Prompt template for the function, defined using the <see cref="P:Microsoft.SemanticKernel.PromptTemplateConfig.SemanticKernelTemplateFormat"/> template format.</param>
+            <param name="promptConfig">Prompt template configuration.</param>
+            <param name="loggerFactory">Logger factory</param>
+            <returns>A function ready to use</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.InvokeCoreAsync(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.KernelArguments,System.Threading.CancellationToken)">
+            <inheritdoc/>j
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.ToString">
+            <summary>
+            JSON serialized string representation of the function.
+            </summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.KernelFunctionFromPrompt.MeasurementModelTagName">
+            <summary>The measurement tag name for the model used.</summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.KernelFunctionFromPrompt.s_invocationTokenUsagePrompt">
+            <summary><see cref="T:System.Diagnostics.Metrics.Counter`1"/> to record function invocation prompt token usage.</summary>
+        </member>
+        <member name="F:Microsoft.SemanticKernel.KernelFunctionFromPrompt.s_invocationTokenUsageCompletion">
+            <summary><see cref="T:System.Diagnostics.Metrics.Counter`1"/> to record function invocation completion token usage.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.AddDefaultValues(Microsoft.SemanticKernel.KernelArguments)">
+            <summary>Add default values to the arguments if an argument is not defined</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.CreateRandomFunctionName">
+            <summary>Create a random, valid function name.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelFunctionFromPrompt.CaptureUsageDetails(System.String,System.Collections.Generic.IReadOnlyDictionary{System.String,System.Object},Microsoft.Extensions.Logging.ILogger)">
+            <summary>
+            Captures usage details, including token information.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelPluginFactory">
+            <summary>
+            Provides static factory methods for creating commonly-used plugin implementations.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPluginFactory.CreateFromType``1(System.String,System.IServiceProvider)">
+            <summary>Creates a plugin that wraps a new instance of the specified type <typeparamref name="T"/>.</summary>
+            <typeparam name="T">Specifies the type of the object to wrap.</typeparam>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <typeparamref name="T"/>.
+            </param>
+            <param name="serviceProvider">
+            The <see cref="T:System.IServiceProvider"/> to use for resolving any required services, such as an <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>
+            and any services required to satisfy a constructor on <typeparamref name="T"/>.
+            </param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <typeparamref name="T"/>.</returns>
+            <remarks>
+            Public methods decorated with <see cref="T:Microsoft.SemanticKernel.KernelFunctionAttribute"/> will be included in the plugin.
+            Attributed methods must all have different names; overloads are not supported.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPluginFactory.CreateFromObject(System.Object,System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>Creates a plugin that wraps the specified target object.</summary>
+            <param name="target">The instance of the class to be wrapped.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <paramref name="target"/>.
+            </param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <paramref name="target"/>.</returns>
+            <remarks>
+            Public methods decorated with <see cref="T:Microsoft.SemanticKernel.KernelFunctionAttribute"/> will be included in the plugin.
+            Attributed methods must all have different names; overloads are not supported.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPluginFactory.CreateFromFunctions(System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Initializes the new plugin from the provided name and function collection.</summary>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPluginFactory.CreateFromFunctions(System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Initializes the new plugin from the provided name, description, and function collection.</summary>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="description">A description of the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.PromptRenderingResult">
+            <summary>
+            Contains result after prompt rendering process.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelExtensions">
+            <summary>Provides extension methods for interacting with <see cref="T:Microsoft.SemanticKernel.Kernel"/> and related types.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreateFunctionFromMethod(Microsoft.SemanticKernel.Kernel,System.Delegate,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelParameterMetadata},Microsoft.SemanticKernel.KernelReturnParameterMetadata)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a method, specified via a delegate.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="method">The method to be represented via the created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>.</param>
+            <param name="functionName">The name to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="description">The description to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>, if possible (e.g. via a <see cref="T:System.ComponentModel.DescriptionAttribute"/> on the method).</param>
+            <param name="parameters">Optional parameter descriptions. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking <paramref name="method"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreateFunctionFromMethod(Microsoft.SemanticKernel.Kernel,System.Reflection.MethodInfo,System.Object,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelParameterMetadata},Microsoft.SemanticKernel.KernelReturnParameterMetadata)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a method, specified via an <see cref="T:System.Reflection.MethodInfo"/> instance
+            and an optional target object if the method is an instance method.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="method">The method to be represented via the created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>.</param>
+            <param name="target">The target object for the <paramref name="method"/> if it represents an instance method. This should be null if and only if <paramref name="method"/> is a static method.</param>
+            <param name="functionName">The name to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="description">The description to use for the function. If null, it will default to one derived from the method represented by <paramref name="method"/>, if possible (e.g. via a <see cref="T:System.ComponentModel.DescriptionAttribute"/> on the method).</param>
+            <param name="parameters">Optional parameter descriptions. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <param name="returnParameter">Optional return parameter description. If null, it will default to one derived from the method represented by <paramref name="method"/>.</param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking <paramref name="method"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreateFunctionFromPrompt(Microsoft.SemanticKernel.Kernel,System.String,Microsoft.SemanticKernel.PromptExecutionSettings,System.String,System.String,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="executionSettings">Default execution settings to use when invoking this prompt function.</param>
+            <param name="functionName">The name to use for the function. If null, it will default to a randomly generated name.</param>
+            <param name="description">The description to use for the function.</param>
+            <param name="templateFormat">The template format of <paramref name="promptTemplate"/>. This must be provided if <paramref name="promptTemplateFactory"/> is not null.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptTemplate"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking the prompt.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreateFunctionFromPrompt(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.SemanticKernel.IPromptTemplateFactory)">
+            <summary>
+            Creates a <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> instance for a prompt specified via a prompt template configuration.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="promptConfig">Configuration information describing the prompt.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptConfig"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <returns>The created <see cref="T:Microsoft.SemanticKernel.KernelFunction"/> for invoking the prompt.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreatePluginFromType``1(Microsoft.SemanticKernel.Kernel,System.String)">
+            <summary>Creates a plugin that wraps a new instance of the specified type <typeparamref name="T"/>.</summary>
+            <typeparam name="T">Specifies the type of the object to wrap.</typeparam>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <typeparamref name="T"/>.
+            </param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <typeparamref name="T"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreatePluginFromObject(Microsoft.SemanticKernel.Kernel,System.Object,System.String)">
+            <summary>Creates a plugin that wraps the specified target object.</summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="target">The instance of the class to be wrapped.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <paramref name="target"/>.
+            </param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <paramref name="target"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreatePluginFromFunctions(Microsoft.SemanticKernel.Kernel,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that contains the specified functions.</summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreatePluginFromFunctions(Microsoft.SemanticKernel.Kernel,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that contains the specified functions.</summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="description">A description of the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.ImportPluginFromType``1(Microsoft.SemanticKernel.Kernel,System.String)">
+            <summary>Creates a plugin that wraps a new instance of the specified type <typeparamref name="T"/> and imports it into the <paramref name="kernel"/>'s plugin collection.</summary>
+            <typeparam name="T">Specifies the type of the object to wrap.</typeparam>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <typeparamref name="T"/>.
+            </param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <typeparamref name="T"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromType``1(System.Collections.Generic.ICollection{Microsoft.SemanticKernel.KernelPlugin},System.String,System.IServiceProvider)">
+            <summary>Creates a plugin that wraps a new instance of the specified type <typeparamref name="T"/> and adds it into the plugin collection.</summary>
+            <typeparam name="T">Specifies the type of the object to wrap.</typeparam>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <typeparamref name="T"/>.
+            </param>
+            <param name="serviceProvider">Service provider from which to resolve dependencies, such as <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <typeparamref name="T"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromType``1(Microsoft.SemanticKernel.IKernelBuilderPlugins,System.String)">
+            <summary>Creates a plugin that wraps a new instance of the specified type <typeparamref name="T"/> and adds it into the plugin collection.</summary>
+            <typeparam name="T">Specifies the type of the object to wrap.</typeparam>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <typeparamref name="T"/>.
+            </param>
+            <returns>The same instance as <paramref name="plugins"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.Add(Microsoft.SemanticKernel.IKernelBuilderPlugins,Microsoft.SemanticKernel.KernelPlugin)">
+            <summary>Adds the <paramref name="plugin"/> to the <paramref name="plugins"/>.</summary>
+            <param name="plugins">The plugin collection to which the plugin should be added.</param>
+            <param name="plugin">The plugin to add.</param>
+            <returns>The same instance as <paramref name="plugins"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.ImportPluginFromObject(Microsoft.SemanticKernel.Kernel,System.Object,System.String)">
+            <summary>Creates a plugin that wraps the specified target object and imports it into the <paramref name="kernel"/>'s plugin collection.</summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="target">The instance of the class to be wrapped.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <paramref name="target"/>.
+            </param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <paramref name="target"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromObject(System.Collections.Generic.ICollection{Microsoft.SemanticKernel.KernelPlugin},System.Object,System.String,System.IServiceProvider)">
+            <summary>Creates a plugin that wraps the specified target object and adds it into the plugin collection.</summary>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="target">The instance of the class to be wrapped.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <paramref name="target"/>.
+            </param>
+            <param name="serviceProvider">Service provider from which to resolve dependencies, such as <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/>.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>s for all relevant members of <paramref name="target"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromObject(Microsoft.SemanticKernel.IKernelBuilderPlugins,System.Object,System.String)">
+            <summary>Creates a plugin that wraps the specified target object and adds it into the plugin collection.</summary>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="target">The instance of the class to be wrapped.</param>
+            <param name="pluginName">
+            Name of the plugin for function collection and prompt templates. If the value is null, a plugin name is derived from the type of the <paramref name="target"/>.
+            </param>
+            <returns>The same instance as <paramref name="plugins"/>.</returns>
+            <remarks>
+            Public methods that have the <see cref="T:Microsoft.SemanticKernel.KernelFunctionFromPrompt"/> attribute will be included in the plugin.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.ImportPluginFromFunctions(Microsoft.SemanticKernel.Kernel,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that contains the specified functions and imports it into the <paramref name="kernel"/>'s plugin collection.</summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.ImportPluginFromFunctions(Microsoft.SemanticKernel.Kernel,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that contains the specified functions and imports it into the <paramref name="kernel"/>'s plugin collection.</summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="description">A description of the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromFunctions(System.Collections.Generic.ICollection{Microsoft.SemanticKernel.KernelPlugin},System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that contains the specified functions and adds it into the plugin collection.</summary>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromFunctions(System.Collections.Generic.ICollection{Microsoft.SemanticKernel.KernelPlugin},System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that contains the specified functions and adds it into the plugin collection.</summary>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="description">A description of the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing the functions provided in <paramref name="functions"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromFunctions(Microsoft.SemanticKernel.IKernelBuilderPlugins,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that wraps the specified target object and adds it into the plugin collection.</summary>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>The same instance as <paramref name="plugins"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromFunctions(Microsoft.SemanticKernel.IKernelBuilderPlugins,System.String,System.String,System.Collections.Generic.IEnumerable{Microsoft.SemanticKernel.KernelFunction})">
+            <summary>Creates a plugin that wraps the specified target object and adds it into the plugin collection.</summary>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="pluginName">The name for the plugin.</param>
+            <param name="description">A description of the plugin.</param>
+            <param name="functions">The initial functions to be available as part of the plugin.</param>
+            <returns>The same instance as <paramref name="plugins"/>.</returns>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="pluginName"/> is an invalid plugin name.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="functions"/> contains a null function.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="functions"/> contains two functions with the same name.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreatePluginFromPromptDirectory(Microsoft.SemanticKernel.Kernel,System.String,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory)">
+            <summary>Creates a plugin containing one function per child directory of the specified <paramref name="pluginDirectory"/>.</summary>
+            <remarks>
+            <para>
+            A plugin directory contains a set of subdirectories, one for each function in the form of a prompt.
+            This method accepts the path of the plugin directory. Each subdirectory's name is used as the function name
+            and may contain only alphanumeric chars and underscores.
+            </para>
+            <code>
+            The following directory structure, with pluginDirectory = "D:\plugins\OfficePlugin",
+            will create a plugin with three functions:
+            D:\plugins\
+                |__ OfficePlugin\                 # pluginDirectory
+                    |__ ScheduleMeeting           #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+                    |__ SummarizeEmailThread      #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+                    |__ MergeWordAndExcelDocs     #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+            </code>
+            <para>
+            See https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins for examples in the Semantic Kernel repository.
+            </para>
+            </remarks>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginDirectory">Path to the directory containing the plugin.</param>
+            <param name="pluginName">The name of the plugin. If null, the name is derived from the <paramref name="pluginDirectory"/> directory name.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting discovered prompts into <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>s.
+            If null, a default factory will be used.
+            </param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing prompt functions created from the specified directory.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.CreatePluginFromPromptDirectory(System.String,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,System.IServiceProvider)">
+            <summary>Creates a plugin containing one function per child directory of the specified <paramref name="pluginDirectory"/>.</summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.ImportPluginFromPromptDirectory(Microsoft.SemanticKernel.Kernel,System.String,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory)">
+            <summary>
+            Creates a plugin containing one function per child directory of the specified <paramref name="pluginDirectory"/>
+            and imports it into the <paramref name="kernel"/>'s plugin collection.
+            </summary>
+            <remarks>
+            <para>
+            A plugin directory contains a set of subdirectories, one for each function in the form of a prompt.
+            This method accepts the path of the plugin directory. Each subdirectory's name is used as the function name
+            and may contain only alphanumeric chars and underscores.
+            </para>
+            <code>
+            The following directory structure, with pluginDirectory = "D:\plugins\OfficePlugin",
+            will create a plugin with three functions:
+            D:\plugins\
+                |__ OfficePlugin\                 # pluginDirectory
+                    |__ ScheduleMeeting           #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+                    |__ SummarizeEmailThread      #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+                    |__ MergeWordAndExcelDocs     #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+            </code>
+            <para>
+            See https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins for examples in the Semantic Kernel repository.
+            </para>
+            </remarks>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="pluginDirectory">Path to the directory containing the plugin, e.g. "/myAppPlugins/StrategyPlugin"</param>
+            <param name="pluginName">The name of the plugin. If null, the name is derived from the <paramref name="pluginDirectory"/> directory name.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting discovered prompts into <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>s.
+            If null, a default factory will be used.
+            </param>
+            <returns>A <see cref="T:Microsoft.SemanticKernel.KernelPlugin"/> containing prompt functions created from the specified directory.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.AddFromPromptDirectory(Microsoft.SemanticKernel.IKernelBuilderPlugins,System.String,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory)">
+            <summary>
+            Creates a plugin containing one function per child directory of the specified <paramref name="pluginDirectory"/>
+            and adds it into the plugin collection.
+            </summary>
+            <remarks>
+            <para>
+            A plugin directory contains a set of subdirectories, one for each function in the form of a prompt.
+            This method accepts the path of the plugin directory. Each subdirectory's name is used as the function name
+            and may contain only alphanumeric chars and underscores.
+            </para>
+            <code>
+            The following directory structure, with pluginDirectory = "D:\plugins\OfficePlugin",
+            will create a plugin with three functions:
+            D:\plugins\
+                |__ OfficePlugin\                 # pluginDirectory
+                    |__ ScheduleMeeting           #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+                    |__ SummarizeEmailThread      #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+                    |__ MergeWordAndExcelDocs     #   function directory
+                        |__ skprompt.txt          #     prompt template
+                        |__ config.json           #     settings (optional file)
+            </code>
+            <para>
+            See https://github.com/microsoft/semantic-kernel/tree/main/samples/plugins for examples in the Semantic Kernel repository.
+            </para>
+            </remarks>
+            <param name="plugins">The plugin collection to which the new plugin should be added.</param>
+            <param name="pluginDirectory">Path to the directory containing the plugin, e.g. "/myAppPlugins/StrategyPlugin"</param>
+            <param name="pluginName">The name of the plugin. If null, the name is derived from the <paramref name="pluginDirectory"/> directory name.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting discovered prompts into <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>s.
+            If null, a default factory will be used.
+            </param>
+            <returns>The same instance as <paramref name="plugins"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.InvokePromptAsync(Microsoft.SemanticKernel.Kernel,System.String,Microsoft.SemanticKernel.KernelArguments,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,System.Threading.CancellationToken)">
+            <summary>
+            Invokes a prompt specified via a prompt template.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="arguments">The arguments to pass to the function's invocation, including any <see cref="T:Microsoft.SemanticKernel.PromptExecutionSettings"/>.</param>
+            <param name="templateFormat">The template format of <paramref name="promptTemplate"/>. This must be provided if <paramref name="promptTemplateFactory"/> is not null.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptTemplate"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <returns>The result of the function's execution.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="kernel"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="promptTemplate"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="promptTemplate"/> is empty or composed entirely of whitespace.</exception>
+            <exception cref="T:Microsoft.SemanticKernel.KernelFunction">The function failed to invoke successfully.</exception>
+            <exception cref="T:Microsoft.SemanticKernel.KernelFunctionCanceledException">The <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>'s invocation was canceled.</exception>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.InvokePromptAsync``1(Microsoft.SemanticKernel.Kernel,System.String,Microsoft.SemanticKernel.KernelArguments,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,System.Threading.CancellationToken)">
+            <summary>
+            Invokes a prompt specified via a prompt template and returns the results of type <typeparamref name="T"/>.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="arguments">The arguments to pass to the function's invocation, including any <see cref="T:Microsoft.SemanticKernel.PromptExecutionSettings"/>.</param>
+            <param name="templateFormat">The template format of <paramref name="promptTemplate"/>. This must be provided if <paramref name="promptTemplateFactory"/> is not null.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptTemplate"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>The <typeparamref name="T"/> of the function result value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="kernel"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="promptTemplate"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="promptTemplate"/> is empty or composed entirely of whitespace.</exception>
+            <exception cref="T:Microsoft.SemanticKernel.KernelFunction">The function failed to invoke successfully.</exception>
+            <exception cref="T:Microsoft.SemanticKernel.KernelFunctionCanceledException">The <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>'s invocation was canceled.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.InvokePromptAsync``1(Microsoft.SemanticKernel.Kernel,System.String,Microsoft.SemanticKernel.KernelArguments,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory)">
+            <summary>
+            Invokes a prompt specified via a prompt template and returns the results of type <typeparamref name="T"/>.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="arguments">The arguments to pass to the function's invocation, including any <see cref="T:Microsoft.SemanticKernel.PromptExecutionSettings"/>.</param>
+            <param name="templateFormat">The template format of <paramref name="promptTemplate"/>. This must be provided if <paramref name="promptTemplateFactory"/> is not null.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptTemplate"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <returns>The <typeparamref name="T"/> of the function result value.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="kernel"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="promptTemplate"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="promptTemplate"/> is empty or composed entirely of whitespace.</exception>
+            <exception cref="T:Microsoft.SemanticKernel.KernelFunction">The function failed to invoke successfully.</exception>
+            <exception cref="T:Microsoft.SemanticKernel.KernelFunctionCanceledException">The <see cref="T:Microsoft.SemanticKernel.KernelFunction"/>'s invocation was canceled.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.InvokePromptStreamingAsync(Microsoft.SemanticKernel.Kernel,System.String,Microsoft.SemanticKernel.KernelArguments,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,System.Threading.CancellationToken)">
+            <summary>
+            Invokes a prompt specified via a prompt template and streams its results.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="arguments">The arguments to pass to the function's invocation, including any <see cref="T:Microsoft.SemanticKernel.PromptExecutionSettings"/>.</param>
+            <param name="templateFormat">The template format of <paramref name="promptTemplate"/>. This must be provided if <paramref name="promptTemplateFactory"/> is not null.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptTemplate"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> for streaming the results of the function's invocation.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="kernel"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="promptTemplate"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="promptTemplate"/> is empty or composed entirely of whitespace.</exception>
+            <remarks>
+            The function will not be invoked until an enumerator is retrieved from the returned <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>
+            and its iteration initiated via an initial call to <see cref="M:System.Collections.Generic.IAsyncEnumerator`1.MoveNextAsync"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.InvokePromptStreamingAsync``1(Microsoft.SemanticKernel.Kernel,System.String,Microsoft.SemanticKernel.KernelArguments,System.String,Microsoft.SemanticKernel.IPromptTemplateFactory,System.Threading.CancellationToken)">
+            <summary>
+            Invokes a prompt specified via a prompt template and streams its results of type <typeparamref name="T"/>.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="promptTemplate">Prompt template for the function.</param>
+            <param name="arguments">The arguments to pass to the function's invocation, including any <see cref="T:Microsoft.SemanticKernel.PromptExecutionSettings"/>.</param>
+            <param name="templateFormat">The template format of <paramref name="promptTemplate"/>. This must be provided if <paramref name="promptTemplateFactory"/> is not null.</param>
+            <param name="promptTemplateFactory">
+            The <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> to use when interpreting the <paramref name="promptTemplate"/> into a <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/>.
+            If null, a default factory will be used.
+            </param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>An <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/> for streaming the results of the function's invocation.</returns>
+            <exception cref="T:System.ArgumentNullException"><paramref name="kernel"/> is null.</exception>
+            <exception cref="T:System.ArgumentNullException"><paramref name="promptTemplate"/> is null.</exception>
+            <exception cref="T:System.ArgumentException"><paramref name="promptTemplate"/> is empty or composed entirely of whitespace.</exception>
+            <remarks>
+            The function will not be invoked until an enumerator is retrieved from the returned <see cref="T:System.Collections.Generic.IAsyncEnumerable`1"/>
+            and its iteration initiated via an initial call to <see cref="M:System.Collections.Generic.IAsyncEnumerator`1.MoveNextAsync"/>.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelExtensions.Build(Microsoft.SemanticKernel.IKernelBuilder)">
+            <summary>Constructs a new instance of <see cref="T:Microsoft.SemanticKernel.Kernel"/> using all of the settings configured on the builder.</summary>
+            <returns>The new <see cref="T:Microsoft.SemanticKernel.Kernel"/> instance.</returns>
+            <remarks>
+            Every call to <see cref="M:Microsoft.SemanticKernel.KernelExtensions.Build(Microsoft.SemanticKernel.IKernelBuilder)"/> produces a new <see cref="T:Microsoft.SemanticKernel.Kernel"/> instance. The resulting <see cref="T:Microsoft.SemanticKernel.Kernel"/>
+            instances will not share the same plugins collection or services provider (unless there are no services).
+            </remarks>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Memory.MemoryBuilder">
+            <summary>
+            A builder for Memory plugin.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.Build">
+            <summary>
+            Build a new instance of <see cref="T:Microsoft.SemanticKernel.Memory.ISemanticTextMemory"/> using the settings passed so far.
+            </summary>
+            <returns>Instance of <see cref="T:Microsoft.SemanticKernel.Memory.ISemanticTextMemory"/>.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.WithLoggerFactory(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Add a logger factory.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <returns>Updated Memory builder including the logger factory.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.WithHttpClient(System.Net.Http.HttpClient)">
+            <summary>
+            Add an HttpClient.
+            </summary>
+            <param name="httpClient"><see cref="T:System.Net.Http.HttpClient"/> to add.</param>
+            <returns>Updated Memory builder including the client.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.WithMemoryStore(Microsoft.SemanticKernel.Memory.IMemoryStore)">
+            <summary>
+            Add memory store.
+            </summary>
+            <param name="store">Store to add.</param>
+            <returns>Updated Memory builder including the memory store.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.WithMemoryStore``1(System.Func{Microsoft.Extensions.Logging.ILoggerFactory,``0})">
+            <summary>
+            Add memory store factory.
+            </summary>
+            <param name="factory">The store factory.</param>
+            <returns>Updated Memory builder including the memory store.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.WithMemoryStore``1(System.Func{Microsoft.Extensions.Logging.ILoggerFactory,System.Net.Http.HttpClient,``0})">
+            <summary>
+            Add memory store factory.
+            </summary>
+            <param name="factory">The store factory.</param>
+            <returns>Updated Memory builder including the memory store.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.WithTextEmbeddingGeneration(Microsoft.SemanticKernel.Embeddings.ITextEmbeddingGenerationService)">
+            <summary>
+            Add text embedding generation.
+            </summary>
+            <param name="textEmbeddingGeneration">The text embedding generation.</param>
+            <returns>Updated Memory builder including the text embedding generation.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.MemoryBuilder.WithTextEmbeddingGeneration``1(System.Func{Microsoft.Extensions.Logging.ILoggerFactory,System.Net.Http.HttpClient,``0})">
+            <summary>
+            Add text embedding generation.
+            </summary>
+            <param name="factory">The text embedding generation factory.</param>
+            <returns>Updated Memory builder including the text embedding generation.</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Memory.SemanticTextMemory">
+            <summary>
+            Implementation of <see cref="T:Microsoft.SemanticKernel.Memory.ISemanticTextMemory"/>. Provides methods to save, retrieve, and search for text information
+            in a semantic memory store.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.SemanticTextMemory.#ctor(Microsoft.SemanticKernel.Memory.IMemoryStore,Microsoft.SemanticKernel.Embeddings.ITextEmbeddingGenerationService)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.Memory.SemanticTextMemory"/> class.
+            </summary>
+            <param name="storage">The memory store to use for storing and retrieving data.</param>
+            <param name="embeddingGenerator">The text embedding generator to use for generating embeddings.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.SemanticTextMemory.SaveInformationAsync(System.String,System.String,System.String,System.String,System.String,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.SemanticTextMemory.SaveReferenceAsync(System.String,System.String,System.String,System.String,System.String,System.String,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.SemanticTextMemory.GetAsync(System.String,System.String,System.Boolean,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.SemanticTextMemory.RemoveAsync(System.String,System.String,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.SemanticTextMemory.SearchAsync(System.String,System.String,System.Int32,System.Double,System.Boolean,Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Memory.SemanticTextMemory.GetCollectionsAsync(Microsoft.SemanticKernel.Kernel,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.AggregatorPromptTemplateFactory">
+            <summary>
+            Provides a <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> which aggregates multiple prompt template factories.
+            </summary>
+            <remarks>
+            Attempts via <see cref="M:Microsoft.SemanticKernel.AggregatorPromptTemplateFactory.TryCreate(Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.SemanticKernel.IPromptTemplate@)"/> to create an <see cref="T:Microsoft.SemanticKernel.IPromptTemplate"/> from a
+            <see cref="T:Microsoft.SemanticKernel.PromptTemplateConfig"/> will iterate through the aggregated factories, using
+            the result from the first to successfully handle the supplied configuration.
+            /// </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.AggregatorPromptTemplateFactory.#ctor(Microsoft.SemanticKernel.IPromptTemplateFactory[])">
+            <summary>Initializes the instance.</summary>
+            <param name="promptTemplateFactories">Ordered <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> instances to aggregate.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.AggregatorPromptTemplateFactory.TryCreate(Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.SemanticKernel.IPromptTemplate@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelPromptTemplate">
+            <summary>
+            Given a prompt, that might contain references to variables and functions:
+            - Get the list of references
+            - Resolve each reference
+              - Variable references are resolved using the context variables
+              - Function references are resolved invoking those functions
+                - Functions can be invoked passing in variables
+                - Functions do not receive the context variables, unless specified using a special variable
+                - Functions can be invoked in order and in parallel so the context variables must be immutable when invoked within the template
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPromptTemplate.#ctor(Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Constructor for PromptTemplate.
+            </summary>
+            <param name="promptConfig">Prompt template configuration</param>
+            <param name="loggerFactory">Logger factory</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPromptTemplate.RenderAsync(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.KernelArguments,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPromptTemplate.ExtractBlocks(Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Given a prompt template string, extract all the blocks (text, variables, function calls)
+            </summary>
+            <returns>A list of all the blocks, ie the template tokenized in text, variables and function calls</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPromptTemplate.RenderAsync(System.Collections.Generic.List{Microsoft.SemanticKernel.TemplateEngine.Block},Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.KernelArguments,System.Threading.CancellationToken)">
+            <summary>
+            Given a list of blocks render each block and compose the final result.
+            </summary>
+            <param name="blocks">Template blocks generated by ExtractBlocks.</param>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="arguments">The arguments.</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>The prompt template ready to be used for an AI request.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPromptTemplate.AddMissingInputVariables(System.Collections.Generic.List{Microsoft.SemanticKernel.TemplateEngine.Block},Microsoft.SemanticKernel.PromptTemplateConfig)">
+            <summary>
+            Augments <paramref name="config"/>'s <see cref="P:Microsoft.SemanticKernel.PromptTemplateConfig.InputVariables"/> with any variables
+            not already contained there but that are referenced in the prompt template.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.KernelPromptTemplateFactory">
+            <summary>
+            Provides an implementation of <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> for the <see cref="P:Microsoft.SemanticKernel.PromptTemplateConfig.SemanticKernelTemplateFormat"/> template format.
+            </summary>
+            <remarks>
+            This is used as the default <see cref="T:Microsoft.SemanticKernel.IPromptTemplateFactory"/> when no other factory is provided.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPromptTemplateFactory.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.KernelPromptTemplateFactory"/> class.
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.KernelPromptTemplateFactory.TryCreate(Microsoft.SemanticKernel.PromptTemplateConfig,Microsoft.SemanticKernel.IPromptTemplate@)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.TemplateEngine.Block">
+            <summary>
+            Base class for blocks parsed from a prompt template
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.TemplateEngine.Block.Content">
+            <summary>
+            The block content
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.TemplateEngine.Block.Logger">
+            <summary>
+            App logger
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.Block.#ctor(System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Base constructor. Prevent external instantiation.
+            </summary>
+            <param name="content">Block content</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.Block.IsValid(System.String@)">
+            <summary>
+            Check if the block content is valid.
+            </summary>
+            <param name="errorMsg">Error message in case the content is not valid</param>
+            <returns>True if the block content is valid</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.CodeBlock.#ctor(System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.TemplateEngine.CodeBlock"/> class.
+            </summary>
+            <param name="content">Block content</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.CodeBlock.#ctor(System.Collections.Generic.List{Microsoft.SemanticKernel.TemplateEngine.Block},System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.TemplateEngine.CodeBlock"/> class.
+            </summary>
+            <param name="tokens">A list of blocks</param>
+            <param name="content">Block content</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.TemplateEngine.CodeBlock.Blocks">
+            <summary>
+            Gets the list of blocks.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.CodeBlock.IsValid(System.String@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.CodeBlock.RenderCodeAsync(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.KernelArguments,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.CodeBlock.EnrichFunctionArguments(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.TemplateEngine.FunctionIdBlock,Microsoft.SemanticKernel.KernelArguments)">
+            <summary>
+            Adds function arguments. If the first argument is not a named argument, it is added to the arguments collection as the 'input' argument.
+            Additionally, for the prompt expression - {{MyPlugin.MyFunction p1=$v1}}, the value of the v1 variable will be resolved from the original arguments collection.
+            Then, the new argument, p1, will be added to the arguments.
+            </summary>
+            <param name="kernel">Kernel instance.</param>
+            <param name="fBlock">Function block.</param>
+            <param name="arguments">The prompt rendering arguments.</param>
+            <returns>The function arguments.</returns>
+            <exception cref="T:Microsoft.SemanticKernel.KernelException">Occurs when any argument other than the first is not a named argument.</exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.FunctionIdBlock.Render(Microsoft.SemanticKernel.KernelArguments)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.TemplateEngine.ICodeRendering">
+            <summary>
+            Interface of dynamic blocks that need async IO to be rendered.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.ICodeRendering.RenderCodeAsync(Microsoft.SemanticKernel.Kernel,Microsoft.SemanticKernel.KernelArguments,System.Threading.CancellationToken)">
+            <summary>
+            Render the block using the given context, potentially using external I/O.
+            </summary>
+            <param name="kernel">The <see cref="T:Microsoft.SemanticKernel.Kernel"/> containing services, plugins, and other state for use throughout the operation.</param>
+            <param name="arguments">The arguments</param>
+            <param name="cancellationToken">The <see cref="T:System.Threading.CancellationToken"/> to monitor for cancellation requests. The default is <see cref="P:System.Threading.CancellationToken.None"/>.</param>
+            <returns>Rendered content</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.TemplateEngine.ITextRendering">
+            <summary>
+            Interface of static blocks that don't need async IO to be rendered.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.ITextRendering.Render(Microsoft.SemanticKernel.KernelArguments)">
+            <summary>
+            Render the block using only the given arguments.
+            </summary>
+            <param name="arguments">Optional arguments the block rendering</param>
+            <returns>Rendered content</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock">
+            <summary>
+            A <see cref="T:Microsoft.SemanticKernel.TemplateEngine.Block"/> that represents a named argument for a function call.
+            For example, in the template {{ MyPlugin.MyFunction var1="foo" }}, var1="foo" is a named arg block.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.Type">
+            <summary>
+            Returns the <see cref="T:Microsoft.SemanticKernel.TemplateEngine.BlockTypes"/>.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.Name">
+            <summary>
+            Gets the name of the function argument.
+            </summary>
+        </member>
+        <member name="P:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.VarBlock">
+            <summary>
+            VarBlock associated with this named argument.
+            </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.#ctor(System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock"/> class.
+            </summary>
+            <param name="text">Raw text parsed from the prompt template.</param>
+            <param name="logger">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+            <exception cref="T:Microsoft.SemanticKernel.KernelException"></exception>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.TryGetNameAndValue(System.String,System.String@,System.String@)">
+            <summary>
+            Attempts to extract the name and value of a named argument block from a string
+            </summary>
+            <param name="text">String from which to extract a name and value</param>
+            <param name="name">Name extracted from argument block, when successful. Empty string otherwise.</param>
+            <param name="value">Value extracted from argument block, when successful. Empty string otherwise.</param>
+            <returns>true when a name and value are successfully extracted from the given text, false otherwise</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.GetValue(Microsoft.SemanticKernel.KernelArguments)">
+            <summary>
+            Gets the rendered value of the function argument. If the value is a <see cref="T:Microsoft.SemanticKernel.TemplateEngine.ValBlock"/>, the value stays the same.
+            If the value is a <see cref="P:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.VarBlock"/>, the value of the variable is determined by the arguments passed in.
+            </summary>
+            <param name="arguments">Arguments to use for rendering the named argument value when the value is a <see cref="P:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.VarBlock"/>.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.Render(Microsoft.SemanticKernel.KernelArguments)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.NamedArgBlock.IsValid(System.String@)">
+            <summary>
+            Returns whether the named arg block has valid syntax.
+            </summary>
+            <param name="errorMsg">An error message that gets set when the named arg block is not valid.</param>
+            <returns></returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.TextBlock.Render(Microsoft.SemanticKernel.KernelArguments)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.ValBlock.#ctor(System.String,Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create an instance
+            </summary>
+            <param name="quotedValue">Block content, including the delimiting chars</param>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.ValBlock.Render(Microsoft.SemanticKernel.KernelArguments)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.VarBlock.Render(Microsoft.SemanticKernel.KernelArguments)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.TemplateEngine.CodeTokenizer">
+             <summary>
+             Simple tokenizer used for default SK template code language.
+            
+             BNF parsed by TemplateTokenizer:
+             [template]       ::= "" | [block] | [block] [template]
+             [block]          ::= [sk-block] | [text-block]
+             [sk-block]       ::= "{{" [variable] "}}" | "{{" [value] "}}" | "{{" [function-call] "}}"
+             [text-block]     ::= [any-char] | [any-char] [text-block]
+             [any-char]       ::= any char
+            
+             BNF parsed by CodeTokenizer:
+             [template]       ::= "" | [variable] " " [template] | [value] " " [template] | [function-call] " " [template]
+             [variable]       ::= "$" [valid-name]
+             [value]          ::= "'" [text] "'" | '"' [text] '"'
+             [function-call]  ::= [function-id] | [function-id] [parameter]
+             [parameter]      ::= [variable] | [value]
+            
+             BNF parsed by dedicated blocks
+             [function-id]    ::= [valid-name] | [valid-name] "." [valid-name]
+             [valid-name]     ::= [valid-symbol] | [valid-symbol] [valid-name]
+             [valid-symbol]   ::= [letter] | [digit] | "_"
+             [letter]         ::= "a" | "b" ... | "z" | "A" | "B" ... | "Z"
+             [digit]          ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+             </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.CodeTokenizer.Tokenize(System.String)">
+            <summary>
+            Tokenize a code block, without checking for syntax errors
+            </summary>
+            <param name="text">Text to parse</param>
+            <returns>A list of blocks</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.TemplateEngine.TemplateTokenizer">
+             <summary>
+             Simple tokenizer used for default SK template language.
+            
+             BNF parsed by TemplateTokenizer:
+             [template]       ::= "" | [block] | [block] [template]
+             [block]          ::= [sk-block] | [text-block]
+             [sk-block]       ::= "{{" [variable] "}}" | "{{" [value] "}}" | "{{" [function-call] "}}"
+             [text-block]     ::= [any-char] | [any-char] [text-block]
+             [any-char]       ::= any char
+            
+             BNF parsed by CodeTokenizer:
+             [template]       ::= "" | [variable] " " [template] | [value] " " [template] | [function-call] " " [template]
+             [variable]       ::= "$" [valid-name]
+             [value]          ::= "'" [text] "'" | '"' [text] '"'
+             [function-call]  ::= [function-id] | [function-id] [parameter]
+             [parameter]      ::= [variable] | [value]
+            
+             BNF parsed by dedicated blocks
+             [function-id]    ::= [valid-name] | [valid-name] "." [valid-name]
+             [valid-name]     ::= [valid-symbol] | [valid-symbol] [valid-name]
+             [valid-symbol]   ::= [letter] | [digit] | "_"
+             [letter]         ::= "a" | "b" ... | "z" | "A" | "B" ... | "Z"
+             [digit]          ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+             </summary>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.TemplateTokenizer.#ctor(Microsoft.Extensions.Logging.ILoggerFactory)">
+            <summary>
+            Create a new instance of SK tokenizer
+            </summary>
+            <param name="loggerFactory">The <see cref="T:Microsoft.Extensions.Logging.ILoggerFactory"/> to use for logging. If null, no logging will be performed.</param>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.TemplateEngine.TemplateTokenizer.Tokenize(System.String)">
+            <summary>
+            Extract blocks from the given text
+            </summary>
+            <param name="text">Text to parse</param>
+            <returns>List of blocks found in the text</returns>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Text.TextChunker">
+            <summary>
+            Split text in chunks, attempting to leave meaning intact.
+            For plain text, split looking at new lines first, then periods, and so on.
+            For markdown, split looking at punctuation first, and so on.
+            </summary>
+        </member>
+        <member name="T:Microsoft.SemanticKernel.Text.TextChunker.TokenCounter">
+            <summary>
+            Delegate for counting tokens in a string.
+            </summary>
+            <param name="input">The input string to count tokens in.</param>
+            <returns>The number of tokens in the input string.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Text.TextChunker.SplitPlainTextLines(System.String,System.Int32,Microsoft.SemanticKernel.Text.TextChunker.TokenCounter)">
+            <summary>
+            Split plain text into lines.
+            </summary>
+            <param name="text">Text to split</param>
+            <param name="maxTokensPerLine">Maximum number of tokens per line.</param>
+            <param name="tokenCounter">Function to count tokens in a string. If not supplied, the default counter will be used.</param>
+            <returns>List of lines.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Text.TextChunker.SplitMarkDownLines(System.String,System.Int32,Microsoft.SemanticKernel.Text.TextChunker.TokenCounter)">
+            <summary>
+            Split markdown text into lines.
+            </summary>
+            <param name="text">Text to split</param>
+            <param name="maxTokensPerLine">Maximum number of tokens per line.</param>
+            <param name="tokenCounter">Function to count tokens in a string. If not supplied, the default counter will be used.</param>
+            <returns>List of lines.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Text.TextChunker.SplitPlainTextParagraphs(System.Collections.Generic.List{System.String},System.Int32,System.Int32,System.String,Microsoft.SemanticKernel.Text.TextChunker.TokenCounter)">
+            <summary>
+            Split plain text into paragraphs.
+            </summary>
+            <param name="lines">Lines of text.</param>
+            <param name="maxTokensPerParagraph">Maximum number of tokens per paragraph.</param>
+            <param name="overlapTokens">Number of tokens to overlap between paragraphs.</param>
+            <param name="chunkHeader">Text to be prepended to each individual chunk.</param>
+            <param name="tokenCounter">Function to count tokens in a string. If not supplied, the default counter will be used.</param>
+            <returns>List of paragraphs.</returns>
+        </member>
+        <member name="M:Microsoft.SemanticKernel.Text.TextChunker.SplitMarkdownParagraphs(System.Collections.Generic.List{System.String},System.Int32,System.Int32,System.String,Microsoft.SemanticKernel.Text.TextChunker.TokenCounter)">
+            <summary>
+            Split markdown text into paragraphs.
+            </summary>
+            <param name="lines">Lines of text.</param>
+            <param name="maxTokensPerParagraph">Maximum number of tokens per paragraph.</param>
+            <param name="overlapTokens">Number of tokens to overlap between paragraphs.</param>
+            <param name="chunkHeader">Text to be prepended to each individual chunk.</param>
+            <param name="tokenCounter">Function to count tokens in a string. If not supplied, the default counter will be used.</param>
+            <returns>List of paragraphs.</returns>
+        </member>
+    </members>
+</doc>
